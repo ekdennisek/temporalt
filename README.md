@@ -1,4 +1,4 @@
-A simple calendar webapp with Swedish holidays.
+A simple calendar webapp with Swedish holidays. No ads, no annoying popups, no nothing. Currently deployed [here](https://temporalt.se).
 
 ## Getting Started
 

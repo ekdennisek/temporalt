@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { initializePolyfills } from "@/lib/polyfills";
 import { calculateWeekNumber } from "@/lib/weekNumber";
-import { isMovableHoliday } from "@/lib/swedishMovableHolidays";
+import { isSwedishHoliday } from "@/lib/swedishHolidays";
 
 interface CalendarDay {
   date: Date;
@@ -23,38 +23,6 @@ interface CalendarWeek {
 interface CalendarProps {
   year: number;
   month: number;
-}
-
-// Fixed Swedish public holidays (allmäna helgdagar)
-const FIXED_SWEDISH_HOLIDAYS: { month: number; day: number; name: string }[] = [
-  { month: 1, day: 1, name: "Nyårsdagen" },
-  { month: 1, day: 6, name: "Trettondedag jul" },
-  { month: 5, day: 1, name: "Första maj" },
-  { month: 6, day: 6, name: "Sveriges nationaldag" },
-  { month: 12, day: 25, name: "Juldagen" },
-  { month: 12, day: 26, name: "Annandag jul" },
-];
-
-function isSwedishHoliday(date: Date): { isHoliday: boolean; name?: string } {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  // Check fixed holidays
-  const fixedHoliday = FIXED_SWEDISH_HOLIDAYS.find(
-    (h) => h.month === month && h.day === day
-  );
-
-  if (fixedHoliday) {
-    return { isHoliday: true, name: fixedHoliday.name };
-  }
-
-  // Check movable holidays
-  const movableHolidayResult = isMovableHoliday(date);
-  if (movableHolidayResult.isHoliday) {
-    return movableHolidayResult;
-  }
-
-  return { isHoliday: false };
 }
 
 function getWeekStartDay(): number {
@@ -374,8 +342,9 @@ export default function Calendar({ year, month }: CalendarProps) {
                 }
 
                 return (
-                  <div
+                  <Link
                     key={`${weekIdx}-${dayIdx}`}
+                    href={`/${day.date.getFullYear()}/${day.date.getMonth() + 1}/${day.date.getDate()}`}
                     style={{
                       padding: "1rem",
                       textAlign: "center",
@@ -387,11 +356,13 @@ export default function Calendar({ year, month }: CalendarProps) {
                       color,
                       opacity: day.isCurrentMonth ? 1 : 0.5,
                       fontWeight,
+                      textDecoration: "none",
+                      cursor: "pointer",
                     }}
                     title={day.holidayName}
                   >
                     {day.dayOfMonth}
-                  </div>
+                  </Link>
                 );
               })}
             </React.Fragment>

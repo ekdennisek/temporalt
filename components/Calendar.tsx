@@ -235,7 +235,7 @@ export default function Calendar({ year, month }: CalendarProps) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "2rem",
+        padding: "1rem",
         boxSizing: "border-box",
       }}
     >
@@ -255,11 +255,12 @@ export default function Calendar({ year, month }: CalendarProps) {
               cursor: "pointer",
               textDecoration: "none",
               color: "#0070f3",
+              whiteSpace: "nowrap",
             }}
           >
             ← {prevMonthName}
           </Link>
-          <h1 style={{ margin: 0 }}>{monthYearText}</h1>
+          <h1 style={{ margin: 0, whiteSpace: "nowrap" }}>{monthYearText}</h1>
           <Link
             href={`/${next.year}/${next.month}`}
             style={{
@@ -267,6 +268,7 @@ export default function Calendar({ year, month }: CalendarProps) {
               cursor: "pointer",
               textDecoration: "none",
               color: "#0070f3",
+              whiteSpace: "nowrap",
             }}
           >
             {nextMonthName} →
@@ -276,10 +278,11 @@ export default function Calendar({ year, month }: CalendarProps) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "auto repeat(7, 1fr)",
+            gridTemplateColumns: "auto repeat(7, minmax(0, 1fr))",
             gap: "1px",
             backgroundColor: "#ddd",
             border: "1px solid #ddd",
+            overflow: "hidden",
           }}
         >
           {/* Week number header */}
@@ -296,7 +299,7 @@ export default function Calendar({ year, month }: CalendarProps) {
             <div
               key={idx}
               style={{
-                padding: "0.75rem",
+                padding: "0.5rem",
                 textAlign: "center",
                 fontWeight: "bold",
                 backgroundColor: "#f5f5f5",
@@ -346,7 +349,7 @@ export default function Calendar({ year, month }: CalendarProps) {
                     key={`${weekIdx}-${dayIdx}`}
                     href={`/${day.date.getFullYear()}/${day.date.getMonth() + 1}/${day.date.getDate()}`}
                     style={{
-                      padding: "1rem",
+                      padding: "0.5rem",
                       textAlign: "center",
                       backgroundColor,
                       minHeight: "60px",

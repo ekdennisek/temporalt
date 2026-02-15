@@ -261,7 +261,7 @@ export default function Calendar({ year, month }: CalendarProps) {
           <h1
             style={{
               whiteSpace: "nowrap",
-              fontSize: "1.5rem",
+              fontSize: "16px",
               fontWeight: "bold",
             }}
           >
@@ -324,7 +324,7 @@ export default function Calendar({ year, month }: CalendarProps) {
                   padding: "0.5rem",
                   textAlign: "center",
                   backgroundColor: "#f5f5f5",
-                  minHeight: "100px",
+                  minHeight: "90px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

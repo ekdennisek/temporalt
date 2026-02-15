@@ -47,7 +47,7 @@ function generateCalendar(
   year: number,
   month: number,
   weekStartDay: number,
-  locale: string
+  locale: string,
 ): CalendarWeek[] {
   const weeks: CalendarWeek[] = [];
 
@@ -110,7 +110,7 @@ function generateCalendar(
   const lastWeek = weeks[weeks.length - 1];
   const hasNextMonthDays = lastWeek.days.some(
     (day) =>
-      day.date.getMonth() !== month - 1 || day.date.getFullYear() !== year
+      day.date.getMonth() !== month - 1 || day.date.getFullYear() !== year,
   );
 
   // If last week is entirely within current month, add one full week from next month
@@ -180,7 +180,7 @@ function getWeekdayNames(weekStartDay: number): string[] {
 
 function getPreviousMonth(
   year: number,
-  month: number
+  month: number,
 ): { year: number; month: number } {
   if (month === 1) {
     return { year: year - 1, month: 12 };
@@ -190,7 +190,7 @@ function getPreviousMonth(
 
 function getNextMonth(
   year: number,
-  month: number
+  month: number,
 ): { year: number; month: number } {
   if (month === 12) {
     return { year: year + 1, month: 1 };
@@ -210,8 +210,7 @@ export default function Calendar({ year, month }: CalendarProps) {
   }, []);
 
   // Get locale-specific week start day
-  const weekStartDay =
-    typeof window !== "undefined" ? getWeekStartDay() : 1;
+  const weekStartDay = typeof window !== "undefined" ? getWeekStartDay() : 1;
 
   if (!mounted) {
     return null; // Or a loading skeleton
@@ -259,7 +258,15 @@ export default function Calendar({ year, month }: CalendarProps) {
           >
             ← {prevMonthName}
           </Link>
-          <h1 style={{ whiteSpace: "nowrap", fontSize: "1.5rem", fontWeight: "bold" }}>{monthYearText}</h1>
+          <h1
+            style={{
+              whiteSpace: "nowrap",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+            }}
+          >
+            {monthYearText}
+          </h1>
           <Link
             href={`/${next.year}/${next.month}`}
             style={{
@@ -317,7 +324,7 @@ export default function Calendar({ year, month }: CalendarProps) {
                   padding: "0.5rem",
                   textAlign: "center",
                   backgroundColor: "#f5f5f5",
-                  minHeight: "60px",
+                  minHeight: "100px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

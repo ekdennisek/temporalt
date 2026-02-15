@@ -236,7 +236,6 @@ export default function Calendar({ year, month }: CalendarProps) {
         alignItems: "center",
         justifyContent: "center",
         padding: "1rem",
-        boxSizing: "border-box",
       }}
     >
       <div style={{ maxWidth: "800px", width: "100%" }}>
@@ -253,22 +252,22 @@ export default function Calendar({ year, month }: CalendarProps) {
             style={{
               padding: "0.5rem 1rem",
               cursor: "pointer",
-              textDecoration: "none",
               color: "#0070f3",
               whiteSpace: "nowrap",
+              fontSize: "0.9rem",
             }}
           >
             ← {prevMonthName}
           </Link>
-          <h1 style={{ margin: 0, whiteSpace: "nowrap" }}>{monthYearText}</h1>
+          <h1 style={{ whiteSpace: "nowrap", fontSize: "1.5rem", fontWeight: "bold" }}>{monthYearText}</h1>
           <Link
             href={`/${next.year}/${next.month}`}
             style={{
               padding: "0.5rem 1rem",
               cursor: "pointer",
-              textDecoration: "none",
               color: "#0070f3",
               whiteSpace: "nowrap",
+              fontSize: "0.9rem",
             }}
           >
             {nextMonthName} →
@@ -359,7 +358,6 @@ export default function Calendar({ year, month }: CalendarProps) {
                       color,
                       opacity: day.isCurrentMonth ? 1 : 0.5,
                       fontWeight,
-                      textDecoration: "none",
                       cursor: "pointer",
                     }}
                     title={day.holidayName}

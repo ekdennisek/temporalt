@@ -1,4 +1,5 @@
 import type { Viewport } from "next";
+import "./globals.css";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -12,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ margin: 0 }}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

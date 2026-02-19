@@ -12,6 +12,7 @@
   "dependencies": {
     "@formatjs/intl-locale": "^4.2.13",
     "next": "^16.1.6",
+    "next-intl": "^4.8.3",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },

@@ -1,0 +1,10 @@
+{
+  "dayPage": {
+    "today": "Idag",
+    "tomorrow": "Imorgon",
+    "yesterday": "Igår",
+    "inDays": "Om {days} dagar",
+    "daysAgo": "{days} dagar sedan",
+    "backToCalendar": "← Tillbaka till kalendern"
+  }
+}

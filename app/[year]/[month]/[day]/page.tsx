@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
 
 interface PageProps {
@@ -12,23 +13,34 @@ interface PageProps {
   }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { year: yearStr, month: monthStr, day: dayStr } = await params;
   const year = parseInt(yearStr, 10);
   const month = parseInt(monthStr, 10);
   const day = parseInt(dayStr, 10);
   if (isNaN(year) || isNaN(month) || isNaN(day)) return {};
   const date = new Date(year, month - 1, day);
-  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return {};
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  )
+    return {};
   const acceptLanguage = (await headers()).get("accept-language");
-  const locale = acceptLanguage?.split(",")[0]?.split(";")[0]?.trim() ?? "sv-SE";
+  const locale =
+    acceptLanguage?.split(",")[0]?.split(";")[0]?.trim() ?? "sv-SE";
   const title = new Intl.DateTimeFormat(locale, { dateStyle: "full" })
     .format(date)
     .replace(/^\w/, (c) => c.toUpperCase());
   return { title };
 }
 
-function getRelativeDayText(date: Date): string {
+function getRelativeDayText(
+  date: Date,
+  t: Awaited<ReturnType<typeof getTranslations>>,
+): string {
   const today = new Date();
   const todayMidnight = new Date(
     today.getFullYear(),
@@ -45,15 +57,15 @@ function getRelativeDayText(date: Date): string {
   const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) {
-    return "Idag";
+    return t("today");
   } else if (diffDays === 1) {
-    return "Imorgon";
+    return t("tomorrow");
   } else if (diffDays === -1) {
-    return "Igår";
+    return t("yesterday");
   } else if (diffDays > 1) {
-    return `Om ${diffDays} dagar`;
+    return t("inDays", { days: diffDays });
   } else {
-    return `${Math.abs(diffDays)} dagar sedan`;
+    return t("daysAgo", { days: Math.abs(diffDays) });
   }
 }
 
@@ -89,8 +101,9 @@ export default async function DayPage({ params }: PageProps) {
     dateStyle: "full",
   }).format(date);
 
+  const t = await getTranslations("dayPage");
   const holidayInfo = isSwedishHoliday(date);
-  const relativeText = getRelativeDayText(date);
+  const relativeText = getRelativeDayText(date, t);
 
   return (
     <main
@@ -124,7 +137,7 @@ export default async function DayPage({ params }: PageProps) {
             textDecoration: "none",
           }}
         >
-          &larr; Tillbaka till kalendern
+          {t("backToCalendar")}
         </Link>
       </div>
     </main>

@@ -78,9 +78,11 @@ function calculateUSWeekNumber(date: Date, firstDay: number): number {
   return weekNumber;
 }
 
+import { FALLBACK_LOCALE } from "./locale";
+
 export function calculateWeekNumber(
   date: Date,
-  locale: string = "en-US"
+  locale: string = FALLBACK_LOCALE
 ): number {
   const weekInfo = getWeekInfoSafe(locale);
 

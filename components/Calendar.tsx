@@ -5,6 +5,7 @@ import Link from "next/link";
 import { initializePolyfills } from "@/lib/polyfills";
 import { calculateWeekNumber } from "@/lib/weekNumber";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
+import { FALLBACK_LOCALE } from "@/lib/locale";
 
 interface CalendarDay {
   date: Date;
@@ -31,7 +32,7 @@ function getWeekStartDay(): number {
   }
 
   try {
-    const locale = new Intl.Locale(navigator.language || "en-US");
+    const locale = new Intl.Locale(navigator.language || FALLBACK_LOCALE);
     if ("getWeekInfo" in locale && typeof locale.getWeekInfo === "function") {
       const weekInfo = locale.getWeekInfo();
       return weekInfo.firstDay % 7;
@@ -149,7 +150,7 @@ function generateCalendar(
 
 function formatMonthYear(year: number, month: number): string {
   const date = new Date(year, month - 1, 1);
-  return new Intl.DateTimeFormat(navigator.language || "en-US", {
+  return new Intl.DateTimeFormat(navigator.language || FALLBACK_LOCALE, {
     month: "long",
     year: "numeric",
   }).format(date);
@@ -157,7 +158,7 @@ function formatMonthYear(year: number, month: number): string {
 
 function formatMonthName(year: number, month: number): string {
   const date = new Date(year, month - 1, 1);
-  return new Intl.DateTimeFormat(navigator.language || "en-US", {
+  return new Intl.DateTimeFormat(navigator.language || FALLBACK_LOCALE, {
     month: "long",
   }).format(date);
 }
@@ -169,7 +170,7 @@ function getWeekdayNames(weekStartDay: number): string[] {
   for (let i = 0; i < 7; i++) {
     const date = new Date(baseDate);
     date.setDate(baseDate.getDate() + ((weekStartDay + i) % 7));
-    const name = new Intl.DateTimeFormat(navigator.language || "en-US", {
+    const name = new Intl.DateTimeFormat(navigator.language || FALLBACK_LOCALE, {
       weekday: "short",
     }).format(date);
     names.push(name);
@@ -216,7 +217,7 @@ export default function Calendar({ year, month }: CalendarProps) {
     return null; // Or a loading skeleton
   }
 
-  const locale = navigator.language || "en-US";
+  const locale = navigator.language || FALLBACK_LOCALE;
   const weeks = generateCalendar(year, month, weekStartDay, locale);
   const monthYearText = formatMonthYear(year, month);
   const weekdayNames = getWeekdayNames(weekStartDay);

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
 
 interface PageProps {
@@ -28,9 +27,7 @@ export async function generateMetadata({
     date.getDate() !== day
   )
     return {};
-  const acceptLanguage = (await headers()).get("accept-language");
-  const locale =
-    acceptLanguage?.split(",")[0]?.split(";")[0]?.trim() ?? "sv-SE";
+  const locale = await getLocale();
   const title = new Intl.DateTimeFormat(locale, { dateStyle: "full" })
     .format(date)
     .replace(/^\w/, (c) => c.toUpperCase());
@@ -97,7 +94,8 @@ export default async function DayPage({ params }: PageProps) {
     redirect("/");
   }
 
-  const formattedDate = new Intl.DateTimeFormat("sv-SE", {
+  const locale = await getLocale();
+  const formattedDate = new Intl.DateTimeFormat(locale, {
     dateStyle: "full",
   }).format(date);
 

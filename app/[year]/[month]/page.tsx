@@ -34,5 +34,7 @@ export default async function CalendarPage({ params }: PageProps) {
     redirect('/');
   }
 
-  return <Calendar year={year} month={month} />;
+  const locale = await getLocale();
+
+  return <Calendar year={year} month={month} locale={locale} />;
 }

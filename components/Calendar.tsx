@@ -1,11 +1,7 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { initializePolyfills } from "@/lib/polyfills";
 import { calculateWeekNumber } from "@/lib/weekNumber";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
-import { FALLBACK_LOCALE } from "@/lib/locale";
 
 interface CalendarDay {
   date: Date;
@@ -24,17 +20,14 @@ interface CalendarWeek {
 interface CalendarProps {
   year: number;
   month: number;
+  locale: string;
 }
 
-function getWeekStartDay(): number {
-  if (typeof window === "undefined") {
-    return 1; // Default to Monday on server
-  }
-
+function getWeekStartDay(locale: string): number {
   try {
-    const locale = new Intl.Locale(navigator.language || FALLBACK_LOCALE);
-    if ("getWeekInfo" in locale && typeof locale.getWeekInfo === "function") {
-      const weekInfo = locale.getWeekInfo();
+    const intlLocale = new Intl.Locale(locale);
+    if ("getWeekInfo" in intlLocale && typeof intlLocale.getWeekInfo === "function") {
+      const weekInfo = intlLocale.getWeekInfo();
       return weekInfo.firstDay % 7;
     }
   } catch (e) {
@@ -148,29 +141,29 @@ function generateCalendar(
   return weeks;
 }
 
-function formatMonthYear(year: number, month: number): string {
+function formatMonthYear(year: number, month: number, locale: string): string {
   const date = new Date(year, month - 1, 1);
-  return new Intl.DateTimeFormat(navigator.language || FALLBACK_LOCALE, {
+  return new Intl.DateTimeFormat(locale, {
     month: "long",
     year: "numeric",
   }).format(date);
 }
 
-function formatMonthName(year: number, month: number): string {
+function formatMonthName(year: number, month: number, locale: string): string {
   const date = new Date(year, month - 1, 1);
-  return new Intl.DateTimeFormat(navigator.language || FALLBACK_LOCALE, {
+  return new Intl.DateTimeFormat(locale, {
     month: "long",
   }).format(date);
 }
 
-function getWeekdayNames(weekStartDay: number): string[] {
+function getWeekdayNames(weekStartDay: number, locale: string): string[] {
   const names: string[] = [];
   const baseDate = new Date(2024, 0, 7);
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(baseDate);
     date.setDate(baseDate.getDate() + ((weekStartDay + i) % 7));
-    const name = new Intl.DateTimeFormat(navigator.language || FALLBACK_LOCALE, {
+    const name = new Intl.DateTimeFormat(locale, {
       weekday: "short",
     }).format(date);
     names.push(name);
@@ -199,34 +192,17 @@ function getNextMonth(
   return { year, month: month + 1 };
 }
 
-export default function Calendar({ year, month }: CalendarProps) {
-  const [mounted, setMounted] = useState(false);
-
-  // Initialize on mount
-  useEffect(() => {
-    initializePolyfills();
-    queueMicrotask(() => {
-      setMounted(true);
-    });
-  }, []);
-
-  // Get locale-specific week start day
-  const weekStartDay = typeof window !== "undefined" ? getWeekStartDay() : 1;
-
-  if (!mounted) {
-    return null; // Or a loading skeleton
-  }
-
-  const locale = navigator.language || FALLBACK_LOCALE;
+export default function Calendar({ year, month, locale }: CalendarProps) {
+  const weekStartDay = getWeekStartDay(locale);
   const weeks = generateCalendar(year, month, weekStartDay, locale);
-  const monthYearText = formatMonthYear(year, month);
-  const weekdayNames = getWeekdayNames(weekStartDay);
+  const monthYearText = formatMonthYear(year, month, locale);
+  const weekdayNames = getWeekdayNames(weekStartDay, locale);
 
   const prev = getPreviousMonth(year, month);
   const next = getNextMonth(year, month);
 
-  const prevMonthName = formatMonthName(prev.year, prev.month);
-  const nextMonthName = formatMonthName(next.year, next.month);
+  const prevMonthName = formatMonthName(prev.year, prev.month, locale);
+  const nextMonthName = formatMonthName(next.year, next.month, locale);
 
   return (
     <main

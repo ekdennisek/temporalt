@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { redirect } from 'next/navigation';
+import { headers } from "next/headers";
 import Calendar from '@/components/Calendar';
 
 interface PageProps {
@@ -6,6 +8,20 @@ interface PageProps {
     year: string;
     month: string;
   }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { year: yearStr, month: monthStr } = await params;
+  const year = parseInt(yearStr, 10);
+  const month = parseInt(monthStr, 10);
+  if (isNaN(year) || isNaN(month) || month < 1 || month > 12) return {};
+  const acceptLanguage = (await headers()).get("accept-language");
+  const locale = acceptLanguage?.split(",")[0]?.split(";")[0]?.trim() ?? "sv-SE";
+  const title = new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(year, month - 1, 1));
+  return { title };
 }
 
 export default async function CalendarPage({ params }: PageProps) {

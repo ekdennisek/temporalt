@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
 
@@ -8,6 +10,22 @@ interface PageProps {
     month: string;
     day: string;
   }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { year: yearStr, month: monthStr, day: dayStr } = await params;
+  const year = parseInt(yearStr, 10);
+  const month = parseInt(monthStr, 10);
+  const day = parseInt(dayStr, 10);
+  if (isNaN(year) || isNaN(month) || isNaN(day)) return {};
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return {};
+  const acceptLanguage = (await headers()).get("accept-language");
+  const locale = acceptLanguage?.split(",")[0]?.split(";")[0]?.trim() ?? "sv-SE";
+  const title = new Intl.DateTimeFormat(locale, { dateStyle: "full" })
+    .format(date)
+    .replace(/^\w/, (c) => c.toUpperCase());
+  return { title };
 }
 
 function getRelativeDayText(date: Date): string {

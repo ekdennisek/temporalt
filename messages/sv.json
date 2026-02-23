@@ -68,5 +68,15 @@
     "logOut": "Logga ut",
     "logIn": "Logga in",
     "register": "Registrera"
+  },
+  "createEventFAB": {
+    "ariaLabel": "Skapa händelse",
+    "titleLabel": "Titel",
+    "dateLabel": "Datum",
+    "startTimeLabel": "Tid (valfri)",
+    "notesLabel": "Anteckningar (valfri)",
+    "save": "Spara",
+    "saving": "Sparar…",
+    "errorGeneric": "Det gick inte att spara händelsen."
   }
 }

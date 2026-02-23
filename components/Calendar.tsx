@@ -17,10 +17,29 @@ interface CalendarWeek {
   days: CalendarDay[];
 }
 
+export interface CalendarEvent {
+  eventId: number;
+  title: string;
+  type: string;
+  date: string;       // "YYYY-MM-DD"
+  startTime?: string | null;
+}
+
+const EVENT_CHIP_COLORS: Record<string, { background: string; color: string }> = {
+  event:    { background: "#0070f3", color: "#fff" },
+  reminder: { background: "#f59e0b", color: "#fff" },
+  birthday: { background: "#ec4899", color: "#fff" },
+};
+
+function getChipStyle(type: string) {
+  return EVENT_CHIP_COLORS[type] ?? EVENT_CHIP_COLORS.event;
+}
+
 interface CalendarProps {
   year: number;
   month: number;
   locale: string;
+  events?: CalendarEvent[];
 }
 
 function getWeekStartDay(locale: string): number {
@@ -192,7 +211,7 @@ function getNextMonth(
   return { year, month: month + 1 };
 }
 
-export default function Calendar({ year, month, locale }: CalendarProps) {
+export default function Calendar({ year, month, locale, events = [] }: CalendarProps) {
   const weekStartDay = getWeekStartDay(locale);
   const weeks = generateCalendar(year, month, weekStartDay, locale);
   const monthYearText = formatMonthYear(year, month, locale);
@@ -327,26 +346,53 @@ export default function Calendar({ year, month, locale }: CalendarProps) {
                   fontWeight = "bold";
                 }
 
+                const dateStr = `${day.date.getFullYear()}-${String(day.date.getMonth() + 1).padStart(2, "0")}-${String(day.date.getDate()).padStart(2, "0")}`;
+                const dayEvents = events.filter((e) => e.date === dateStr);
+
                 return (
                   <Link
                     key={`${weekIdx}-${dayIdx}`}
                     href={`/${day.date.getFullYear()}/${day.date.getMonth() + 1}/${day.date.getDate()}`}
                     style={{
-                      padding: "0.5rem",
-                      textAlign: "center",
+                      padding: "0.25rem 0.5rem",
                       backgroundColor,
                       minHeight: "60px",
                       display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-start",
+                      gap: "2px",
                       color,
                       opacity: day.isCurrentMonth ? 1 : 0.5,
-                      fontWeight,
                       cursor: "pointer",
                     }}
                     title={day.holidayName}
                   >
-                    {day.dayOfMonth}
+                    <span style={{ fontWeight, fontSize: "0.9em", lineHeight: "1.6" }}>
+                      {day.dayOfMonth}
+                    </span>
+                    {dayEvents.map((event) => {
+                      const chip = getChipStyle(event.type);
+                      return (
+                        <span
+                          key={event.eventId}
+                          style={{
+                            backgroundColor: chip.background,
+                            color: chip.color,
+                            fontSize: "0.7em",
+                            borderRadius: "3px",
+                            padding: "1px 4px",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxWidth: "100%",
+                            display: "block",
+                          }}
+                        >
+                          {event.title}
+                        </span>
+                      );
+                    })}
                   </Link>
                 );
               })}

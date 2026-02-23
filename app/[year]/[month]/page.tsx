@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from 'next/navigation';
 import { getLocale } from "next-intl/server";
 import Calendar from '@/components/Calendar';
+import { getSessionUser } from "@/lib/auth/session";
+import { getEventsForMonth } from "@/lib/db/calendarEvents";
 
 interface PageProps {
   params: Promise<{
@@ -34,7 +36,8 @@ export default async function CalendarPage({ params }: PageProps) {
     redirect('/');
   }
 
-  const locale = await getLocale();
+  const [locale, user] = await Promise.all([getLocale(), getSessionUser()]);
+  const events = user ? await getEventsForMonth(user.userId, year, month) : [];
 
-  return <Calendar year={year} month={month} locale={locale} />;
+  return <Calendar year={year} month={month} locale={locale} events={events} />;
 }

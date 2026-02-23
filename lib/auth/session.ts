@@ -30,13 +30,15 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
  * Returns the authenticated user by reading and verifying the access token cookie directly.
  * Works on all pages (not just middleware-protected routes).
  */
-export async function getSessionUser(): Promise<{ email: string } | null> {
+export async function getSessionUser(): Promise<SessionUser | null> {
     const jar = await cookies();
     const token = jar.get("access_token")?.value;
     if (!token) return null;
     try {
         const payload = await verifyAccessToken(token);
-        return { email: payload.email };
+        const userId = Number(payload.sub);
+        if (!Number.isFinite(userId)) return null;
+        return { userId, email: payload.email };
     } catch {
         return null;
     }

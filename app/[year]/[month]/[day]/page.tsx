@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
+import { getSessionUser } from "@/lib/auth/session";
+import { getEventsForDate } from "@/lib/db/calendarEvents";
 
 interface PageProps {
   params: Promise<{
@@ -94,14 +96,18 @@ export default async function DayPage({ params }: PageProps) {
     redirect("/");
   }
 
-  const locale = await getLocale();
+  const [locale, t, user] = await Promise.all([
+    getLocale(),
+    getTranslations("dayPage"),
+    getSessionUser(),
+  ]);
   const formattedDate = new Intl.DateTimeFormat(locale, {
     dateStyle: "full",
   }).format(date);
 
-  const t = await getTranslations("dayPage");
   const holidayInfo = isSwedishHoliday(date);
   const relativeText = getRelativeDayText(date, t);
+  const events = user ? await getEventsForDate(user.userId, year, month, day) : [];
 
   return (
     <main
@@ -124,6 +130,39 @@ export default async function DayPage({ params }: PageProps) {
         )}
 
         <p style={{ fontSize: "1.1rem", color: "#666" }}>{relativeText}</p>
+
+        {events.length > 0 && (
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: "1.5rem 0 0",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+            }}
+          >
+            {events.map((event) => (
+              <li
+                key={event.eventId}
+                style={{
+                  padding: "0.5rem 0.75rem",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "6px",
+                  textAlign: "left",
+                  fontSize: "0.95rem",
+                }}
+              >
+                {event.startTime && (
+                  <span style={{ color: "#666", marginRight: "0.5rem", fontSize: "0.85rem" }}>
+                    {event.startTime.slice(0, 5)}
+                  </span>
+                )}
+                {event.title}
+              </li>
+            ))}
+          </ul>
+        )}
 
         <Link
           href={`/${year}/${month}`}

@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { getSessionUser } from "@/lib/auth/session";
 import UserFAB from "@/components/UserFAB";
+import CreateEventFAB from "@/components/CreateEventFAB";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -23,6 +24,7 @@ export default async function RootLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <UserFAB user={user} />
+          {user && <CreateEventFAB />}
           {children}
         </NextIntlClientProvider>
       </body>

@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import type { AccessTokenPayload } from "@/lib/auth/tokens";
 
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET ?? "");
+function getSecret(): Uint8Array {
+    const s = process.env.JWT_SECRET;
+    if (!s) throw new Error("JWT_SECRET is not set");
+    return new TextEncoder().encode(s);
+}
 
 // Add path prefixes that require authentication here
 const PROTECTED_PAGE_PREFIXES = ["/account", "/settings"];
@@ -36,7 +40,7 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-        const { payload } = await jwtVerify(token, SECRET);
+        const { payload } = await jwtVerify(token, getSecret());
         const user = payload as unknown as AccessTokenPayload;
 
         // Forward user identity to server components via request headers

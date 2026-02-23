@@ -2,9 +2,11 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { createHash, randomBytes } from "crypto";
 
-const SECRET = new TextEncoder().encode(
-    process.env.JWT_SECRET ?? (() => { throw new Error("JWT_SECRET is not set"); })(),
-);
+function getSecret(): Uint8Array {
+    const s = process.env.JWT_SECRET;
+    if (!s) throw new Error("JWT_SECRET is not set");
+    return new TextEncoder().encode(s);
+}
 
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;        // 15 minutes
 const REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days
@@ -23,11 +25,11 @@ export async function signAccessToken(payload: AccessTokenPayload): Promise<stri
         .setSubject(payload.sub)
         .setIssuedAt()
         .setExpirationTime(`${ACCESS_TOKEN_TTL_SECONDS}s`)
-        .sign(SECRET);
+        .sign(getSecret());
 }
 
 export async function verifyAccessToken(token: string): Promise<AccessTokenPayload> {
-    const { payload } = await jwtVerify(token, SECRET);
+    const { payload } = await jwtVerify(token, getSecret());
     return {
         sub: payload.sub as string,
         email: payload["email"] as string,

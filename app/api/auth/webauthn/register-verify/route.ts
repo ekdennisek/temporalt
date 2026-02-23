@@ -3,7 +3,7 @@ import { verifyRegistrationResponse } from "@simplewebauthn/server";
 import { z } from "zod";
 import { tx } from "@/lib/queries";
 import { consumeChallenge, savePasskey } from "@/lib/db/passkeys";
-import { createUser, findUserByEmail } from "@/lib/db/users";
+import { createUser, findUserByEmail, findUserById } from "@/lib/db/users";
 import { createRefreshToken } from "@/lib/db/refreshTokens";
 import {
     createActivationToken,
@@ -54,6 +54,17 @@ export async function POST(request: NextRequest) {
             { error: "Invalid or expired challenge" },
             { status: 400 },
         );
+    }
+
+    // Verify the submitted email matches the user the challenge was issued for.
+    // Without this check an attacker could complete a ceremony for their own email,
+    // then substitute a victim's email in the verify request and attach their
+    // passkey to the victim's account.
+    if (challengeRow.userId !== null) {
+        const expectedUser = await findUserById(challengeRow.userId);
+        if (!expectedUser || expectedUser.emailLower !== email.trim().toLowerCase()) {
+            return NextResponse.json({ error: "Email mismatch" }, { status: 400 });
+        }
     }
 
     let verification;

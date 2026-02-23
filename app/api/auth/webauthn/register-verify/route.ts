@@ -6,12 +6,20 @@ import { consumeChallenge, savePasskey } from "@/lib/db/passkeys";
 import { createUser, findUserByEmail } from "@/lib/db/users";
 import { createRefreshToken } from "@/lib/db/refreshTokens";
 import {
+    createActivationToken,
+    invalidateActivationTokens,
+} from "@/lib/db/activationTokens";
+import {
+    generateActivationToken,
     generateRefreshToken,
+    hashActivationToken,
     hashRefreshToken,
     refreshTokenExpiresAt,
     setAuthCookies,
     signAccessToken,
 } from "@/lib/auth/tokens";
+import { sendMail } from "@/lib/email/mailer";
+import { activationEmail } from "@/lib/email/templates/activation";
 import { randomUUID } from "crypto";
 
 const RP_ID = process.env.WEBAUTHN_RP_ID ?? "localhost";
@@ -22,6 +30,8 @@ const BodySchema = z.object({
     challenge: z.string(),
     credential: z.unknown(),
 });
+
+const ACTIVATION_TTL_MS = 24 * 60 * 60 * 1000;
 
 export async function POST(request: NextRequest) {
     let body: unknown;
@@ -72,18 +82,6 @@ export async function POST(request: NextRequest) {
             existingUser = await createUser({ email, passwordHash: null });
         }
 
-        // Passkey-registered users are immediately active (no email verification needed
-        // because the authenticator proves presence, not email ownership).
-        // If their account was pending (password reg without verification), activate it now.
-        if (existingUser.status === "pending") {
-            const { none } = await import("@/lib/queries");
-            const sql = (await import("sql-template-tag")).default;
-            await none(
-                sql`UPDATE users SET "status" = 'active', "updatedAt" = NOW() WHERE "userId" = ${existingUser.userId}`,
-            );
-            existingUser = { ...existingUser, status: "active" };
-        }
-
         await savePasskey({
             userId: existingUser.userId,
             credentialId: Buffer.from(cred.id, "base64url"),
@@ -95,9 +93,29 @@ export async function POST(request: NextRequest) {
             transports: (cred.transports ?? []) as string[],
         });
 
+        if (existingUser.status === "pending") {
+            await invalidateActivationTokens(existingUser.userId);
+
+            const rawToken = generateActivationToken();
+            const tokenHash = hashActivationToken(rawToken);
+            const expiresAt = new Date(Date.now() + ACTIVATION_TTL_MS);
+            await createActivationToken({ userId: existingUser.userId, tokenHash, expiresAt });
+
+            const activationUrl = `${APP_URL}/api/auth/verify-email?token=${rawToken}`;
+            await sendMail({ to: email, ...activationEmail(activationUrl) });
+        }
+
         return existingUser;
     });
 
+    if (user.status === "pending") {
+        return NextResponse.json(
+            { message: "Check your email to activate your account." },
+            { status: 201 },
+        );
+    }
+
+    // User is already active (added a passkey to an existing verified account) — log them in.
     const accessToken = await signAccessToken({
         sub: String(user.userId),
         email: user.email,

@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface Props {
     onEmailChange?: (email: string) => void;
@@ -12,6 +13,7 @@ export function RegisterForm({ onEmailChange }: Props) {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
+    const t = useTranslations("registerForm");
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -32,13 +34,13 @@ export function RegisterForm({ onEmailChange }: Props) {
             const data = await res.json();
 
             if (!res.ok) {
-                setError(data.error ?? "Registration failed.");
+                setError(data.error ?? t("registrationFailed"));
                 return;
             }
 
             setSuccess(true);
         } catch {
-            setError("Network error. Please try again.");
+            setError(t("networkError"));
         } finally {
             setLoading(false);
         }
@@ -47,7 +49,7 @@ export function RegisterForm({ onEmailChange }: Props) {
     if (success) {
         return (
             <p style={{ color: "#1a7a1a", background: "#e8f5e8", padding: "12px", borderRadius: 6, fontSize: 14 }}>
-                Check your email — we sent you an activation link.
+                {t("checkEmail")}
             </p>
         );
     }
@@ -60,7 +62,7 @@ export function RegisterForm({ onEmailChange }: Props) {
                 </p>
             )}
             <div style={{ marginBottom: 16 }}>
-                <label htmlFor="email" style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}>Email</label>
+                <label htmlFor="email" style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}>{t("email")}</label>
                 <input
                     id="email"
                     name="email"
@@ -72,7 +74,7 @@ export function RegisterForm({ onEmailChange }: Props) {
                 />
             </div>
             <div style={{ marginBottom: 16 }}>
-                <label htmlFor="password" style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}>Password</label>
+                <label htmlFor="password" style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}>{t("password")}</label>
                 <input
                     id="password"
                     name="password"
@@ -88,7 +90,7 @@ export function RegisterForm({ onEmailChange }: Props) {
                 disabled={loading}
                 style={{ width: "100%", padding: "10px 0", background: "#0070f3", color: "white", border: "none", borderRadius: 6, fontSize: 15, cursor: "pointer", marginTop: 4, opacity: loading ? 0.7 : 1 }}
             >
-                {loading ? "Creating account…" : "Create account"}
+                {loading ? t("creatingAccount") : t("createAccount")}
             </button>
         </form>
     );

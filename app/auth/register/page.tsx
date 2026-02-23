@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { PasskeyRegisterButton } from "@/components/auth/PasskeyRegisterButton";
+import { useTranslations } from "next-intl";
 
 const card: React.CSSProperties = {
     maxWidth: 380,
@@ -21,18 +22,19 @@ const divider: React.CSSProperties = {
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
+    const t = useTranslations("registerPage");
 
     return (
         <main style={card}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "#111" }}>Create account</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "#111" }}>{t("heading")}</h1>
             <section>
-                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, color: "#333" }}>Email and password</h2>
+                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, color: "#333" }}>{t("emailAndPassword")}</h2>
                 <RegisterForm onEmailChange={setEmail} />
             </section>
             <div style={divider} />
             <section>
-                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 8, color: "#333" }}>Or use a passkey</h2>
-                <p style={{ fontSize: 13, color: "#666", marginBottom: 12 }}>Enter your email above, then register a passkey.</p>
+                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 8, color: "#333" }}>{t("orUsePasskey")}</h2>
+                <p style={{ fontSize: 13, color: "#666", marginBottom: 12 }}>{t("passkeyDescription")}</p>
                 <PasskeyRegisterButton email={email} />
             </section>
         </main>

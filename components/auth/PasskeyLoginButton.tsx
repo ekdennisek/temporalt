@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { startAuthentication } from "@simplewebauthn/browser";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface Props {
     email: string;
@@ -12,6 +13,7 @@ export function PasskeyLoginButton({ email }: Props) {
     const router = useRouter();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const t = useTranslations("passkeyLoginButton");
 
     async function handleClick() {
         setError(null);
@@ -23,7 +25,7 @@ export function PasskeyLoginButton({ email }: Props) {
                 `/api/auth/webauthn/auth-options?email=${encodeURIComponent(email)}`,
             );
             if (!optRes.ok) {
-                setError("Failed to start passkey login.");
+                setError(t("failedToStart"));
                 return;
             }
             const { options } = await optRes.json();
@@ -34,9 +36,9 @@ export function PasskeyLoginButton({ email }: Props) {
                 credential = await startAuthentication({ optionsJSON: options });
             } catch (err) {
                 if (err instanceof Error && err.name === "NotAllowedError") {
-                    setError("Passkey login was cancelled.");
+                    setError(t("cancelled"));
                 } else {
-                    setError("Passkey login failed.");
+                    setError(t("loginFailed"));
                 }
                 return;
             }
@@ -53,14 +55,14 @@ export function PasskeyLoginButton({ email }: Props) {
 
             if (!verifyRes.ok) {
                 const data = await verifyRes.json();
-                setError(data.error ?? "Passkey login failed.");
+                setError(data.error ?? t("loginFailed"));
                 return;
             }
 
             router.push("/");
             router.refresh();
         } catch {
-            setError("Network error. Please try again.");
+            setError(t("networkError"));
         } finally {
             setLoading(false);
         }
@@ -79,7 +81,7 @@ export function PasskeyLoginButton({ email }: Props) {
                 disabled={loading || !email}
                 style={{ width: "100%", padding: "10px 0", background: "transparent", color: "#0070f3", border: "1px solid #0070f3", borderRadius: 6, fontSize: 15, cursor: "pointer", opacity: (loading || !email) ? 0.5 : 1 }}
             >
-                {loading ? "Authenticating…" : "Log in with passkey"}
+                {loading ? t("authenticating") : t("logInWithPasskey")}
             </button>
         </div>
     );

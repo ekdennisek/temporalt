@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 interface Props {
     searchParams: Promise<{ error?: string }>;
@@ -34,13 +35,14 @@ const link: React.CSSProperties = {
 
 export default async function VerifyEmailPage({ searchParams }: Props) {
     const { error } = await searchParams;
+    const t = await getTranslations("verifyEmailPage");
 
     if (error === "invalid_token") {
         return (
             <main style={card}>
-                <h1 style={heading}>Invalid activation link</h1>
-                <p style={body}>This link is invalid or has already been used.</p>
-                <Link href="/auth/register" style={link}>Request a new activation email</Link>
+                <h1 style={heading}>{t("invalidTokenHeading")}</h1>
+                <p style={body}>{t("invalidTokenDescription")}</p>
+                <Link href="/auth/register" style={link}>{t("invalidTokenLink")}</Link>
             </main>
         );
     }
@@ -48,9 +50,9 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
     if (error === "expired_token" || error === "missing_token") {
         return (
             <main style={card}>
-                <h1 style={heading}>Activation link expired</h1>
-                <p style={body}>Your activation link has expired. Register again to receive a new one.</p>
-                <Link href="/auth/register" style={link}>Register</Link>
+                <h1 style={heading}>{t("expiredTokenHeading")}</h1>
+                <p style={body}>{t("expiredTokenDescription")}</p>
+                <Link href="/auth/register" style={link}>{t("expiredTokenLink")}</Link>
             </main>
         );
     }
@@ -58,9 +60,9 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
     // On success the API route redirects to / — this page is only shown on error.
     return (
         <main style={card}>
-            <h1 style={heading}>Something went wrong</h1>
-            <p style={body}>Please try again.</p>
-            <Link href="/auth/register" style={link}>Back to registration</Link>
+            <h1 style={heading}>{t("errorHeading")}</h1>
+            <p style={body}>{t("errorDescription")}</p>
+            <Link href="/auth/register" style={link}>{t("errorLink")}</Link>
         </main>
     );
 }

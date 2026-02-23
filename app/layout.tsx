@@ -21,8 +21,8 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body>
-        <UserFAB user={user} />
         <NextIntlClientProvider messages={messages}>
+          <UserFAB user={user} />
           {children}
         </NextIntlClientProvider>
       </body>

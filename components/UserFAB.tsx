@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface Props {
     user: { email: string } | null;
@@ -11,6 +12,7 @@ export default function UserFAB({ user }: Props) {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
     const router = useRouter();
+    const t = useTranslations("userFAB");
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
@@ -33,7 +35,7 @@ export default function UserFAB({ user }: Props) {
         <div ref={ref} style={{ position: "fixed", top: 16, right: 16, zIndex: 1000 }}>
             <button
                 onClick={() => setOpen((o) => !o)}
-                aria-label="User menu"
+                aria-label={t("ariaLabel")}
                 style={{
                     width: 44,
                     height: 44,
@@ -82,7 +84,7 @@ export default function UserFAB({ user }: Props) {
                                 color: "#333",
                             }}
                         >
-                            Log out
+                            {t("logOut")}
                         </button>
                     ) : (
                         <>
@@ -96,7 +98,7 @@ export default function UserFAB({ user }: Props) {
                                     color: "#333",
                                 }}
                             >
-                                Log in
+                                {t("logIn")}
                             </a>
                             <a
                                 href="/auth/register"
@@ -109,7 +111,7 @@ export default function UserFAB({ user }: Props) {
                                     borderTop: "1px solid #eee",
                                 }}
                             >
-                                Register
+                                {t("register")}
                             </a>
                         </>
                     )}

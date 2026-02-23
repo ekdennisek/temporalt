@@ -1,6 +1,8 @@
 import type { Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { getSessionUser } from "@/lib/auth/session";
+import UserFAB from "@/components/UserFAB";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -15,10 +17,12 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const user = await getSessionUser();
   return (
     <html lang={locale}>
       <body>
         <NextIntlClientProvider messages={messages}>
+          <UserFAB user={user} />
           {children}
         </NextIntlClientProvider>
       </body>

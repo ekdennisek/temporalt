@@ -5,6 +5,7 @@ import { getSessionUser } from "@/lib/auth/session";
 import { createEvent, updateEvent, deleteEvent } from "@/lib/db/calendarEvents";
 
 const CreateEventSchema = z.object({
+    type: z.enum(["event", "tracking"]).default("event"),
     title: z.string().min(1).max(500),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     startTime: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
@@ -55,7 +56,7 @@ export async function createCalendarEvent(
     const parsed = CreateEventSchema.parse(data);
 
     return createEvent(user.userId, {
-        type: "event",
+        type: parsed.type,
         title: parsed.title,
         date: parsed.date,
         startTime: parsed.startTime ?? null,

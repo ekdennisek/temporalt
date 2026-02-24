@@ -29,6 +29,7 @@ const EVENT_CHIP_COLORS: Record<string, { background: string; color: string }> =
   event:    { background: "#0070f3", color: "#fff" },
   reminder: { background: "#f59e0b", color: "#fff" },
   birthday: { background: "#ec4899", color: "#fff" },
+  tracking: { background: "#10b981", color: "#fff" },
 };
 
 function getChipStyle(type: string) {

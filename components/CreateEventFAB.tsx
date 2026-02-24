@@ -15,6 +15,7 @@ function todayAsDateString() {
 
 export default function CreateEventFAB() {
     const [open, setOpen] = useState(false);
+    const [type, setType] = useState<"event" | "tracking">("event");
     const [title, setTitle] = useState("");
     const [date, setDate] = useState(todayAsDateString);
     const [startTime, setStartTime] = useState("");
@@ -36,6 +37,7 @@ export default function CreateEventFAB() {
     }, []);
 
     function handleOpen() {
+        setType("event");
         setDate(todayAsDateString());
         setTitle("");
         setStartTime("");
@@ -50,6 +52,7 @@ export default function CreateEventFAB() {
         setError(null);
         try {
             await createCalendarEvent({
+                type,
                 title,
                 date,
                 startTime: startTime || null,
@@ -105,6 +108,27 @@ export default function CreateEventFAB() {
                     }}
                 >
                     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div style={{ display: "flex", gap: 0, borderRadius: 4, overflow: "hidden", border: "1px solid #ccc" }}>
+                            {(["event", "tracking"] as const).map((opt) => (
+                                <button
+                                    key={opt}
+                                    type="button"
+                                    onClick={() => setType(opt)}
+                                    style={{
+                                        flex: 1,
+                                        padding: "6px 0",
+                                        fontSize: 13,
+                                        border: "none",
+                                        cursor: "pointer",
+                                        backgroundColor: type === opt ? "#0070f3" : "white",
+                                        color: type === opt ? "white" : "#555",
+                                        fontWeight: type === opt ? "600" : "normal",
+                                    }}
+                                >
+                                    {t(`type_${opt}`)}
+                                </button>
+                            ))}
+                        </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                             <label style={{ fontSize: 12, color: "#555" }}>{t("titleLabel")}</label>
                             <input

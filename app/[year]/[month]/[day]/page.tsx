@@ -153,12 +153,19 @@ export default async function DayPage({ params }: PageProps) {
                   fontSize: "0.95rem",
                 }}
               >
-                {event.startTime && (
-                  <span style={{ color: "#666", marginRight: "0.5rem", fontSize: "0.85rem" }}>
-                    {event.startTime.slice(0, 5)}
-                  </span>
+                <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
+                  {event.startTime && (
+                    <span style={{ color: "#666", fontSize: "0.85rem", flexShrink: 0 }}>
+                      {event.startTime.slice(0, 5)}
+                    </span>
+                  )}
+                  <span>{event.title}</span>
+                </div>
+                {event.notes && (
+                  <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "#888" }}>
+                    {event.notes}
+                  </p>
                 )}
-                {event.title}
               </li>
             ))}
           </ul>

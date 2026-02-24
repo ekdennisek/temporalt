@@ -1,7 +1,3 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { rotateRefreshToken } from "@/lib/db/refreshTokens";
-import { findUserById } from "@/lib/db/users";
 import {
     clearAuthCookies,
     generateRefreshToken,
@@ -10,8 +6,12 @@ import {
     setAuthCookies,
     signAccessToken,
 } from "@/lib/auth/tokens";
+import { rotateRefreshToken } from "@/lib/db/refreshTokens";
+import { findUserById } from "@/lib/db/users";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
     const jar = await cookies();
     const rawOldToken = jar.get("refresh_token")?.value;
 
@@ -24,19 +24,24 @@ export async function POST(_request: NextRequest) {
     const newTokenHash = hashRefreshToken(rawNewToken);
     const newExpiresAt = refreshTokenExpiresAt();
 
-    const newTokenRow = await rotateRefreshToken({
+    const result = await rotateRefreshToken({
         oldTokenHash,
         newTokenHash,
         newExpiresAt,
     });
 
-    if (!newTokenRow) {
-        // Token not found, expired, already rotated (reuse attack), or locked by concurrent request
+    if (!result.ok) {
+        if (result.reason === "locked") {
+            // A concurrent request is already rotating this token.
+            // Do NOT clear cookies — the winner's Set-Cookie will arrive on the response.
+            return NextResponse.json({ error: "Concurrent refresh" }, { status: 409 });
+        }
+        // Genuine failure: not found, expired, revoked, or reuse detected.
         await clearAuthCookies();
         return NextResponse.json({ error: "Invalid refresh token" }, { status: 401 });
     }
 
-    const user = await findUserById(newTokenRow.userId);
+    const user = await findUserById(result.token.userId);
     if (!user || user.status !== "active") {
         await clearAuthCookies();
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -50,5 +55,5 @@ export async function POST(_request: NextRequest) {
 
     await setAuthCookies(accessToken, rawNewToken);
 
-    return NextResponse.json({ message: "Token refreshed." });
+    return NextResponse.json({ userId: user.userId, email: user.email });
 }

@@ -84,7 +84,7 @@ export async function setAuthCookies(
         httpOnly: true,
         secure: IS_PRODUCTION,
         sameSite: "lax",
-        path: "/api/auth/refresh",
+        path: "/",
         maxAge: REFRESH_TOKEN_TTL_SECONDS,
     });
 }
@@ -92,12 +92,11 @@ export async function setAuthCookies(
 export async function clearAuthCookies(): Promise<void> {
     const jar = await cookies();
     jar.delete("access_token");
-    // refresh_token is scoped to /api/auth/refresh so we must set path explicitly
     jar.set("refresh_token", "", {
         httpOnly: true,
         secure: IS_PRODUCTION,
         sameSite: "lax",
-        path: "/api/auth/refresh",
+        path: "/",
         maxAge: 0,
     });
 }

@@ -3,6 +3,10 @@ import { z } from "zod";
 import { none, one, oneOrNone } from "../queries";
 import { tx } from "../queries";
 
+type RotateResult =
+    | { ok: true; token: RefreshToken }
+    | { ok: false; reason: "not_found" | "reuse" | "locked" };
+
 const RefreshTokenSchema = z.object({
     refreshTokenId: z.number(),
     userId: z.number(),
@@ -39,17 +43,18 @@ export async function createRefreshToken(opts: {
  * - Inserts a new token in the same family
  * - Marks the old token as replaced
  *
- * Returns the new token row on success, or null if:
- *   - Token not found / expired / already revoked → caller should return 401
- *   - Reuse detected → caller should return 401 (family is revoked)
+ * Returns a discriminated result:
+ *   - { ok: true, token } on success
+ *   - { ok: false, reason: "locked" } if a concurrent request holds the lock (caller should return 409)
+ *   - { ok: false, reason: "not_found" | "reuse" } if the token is invalid (caller should return 401)
  */
 export async function rotateRefreshToken(opts: {
     oldTokenHash: string;
     newTokenHash: string;
     newExpiresAt: Date;
-}): Promise<RefreshToken | null> {
+}): Promise<RotateResult> {
     return tx(async () => {
-        // Lock the row exclusively; SKIP LOCKED means concurrent requests get null immediately
+        // Lock the row exclusively; SKIP LOCKED means concurrent requests skip past immediately
         const old = await oneOrNone(
             sql`
                 SELECT * FROM refresh_tokens
@@ -61,7 +66,25 @@ export async function rotateRefreshToken(opts: {
             RefreshTokenSchema,
         );
 
-        if (!old) return null;
+        if (!old) {
+            // Distinguish "locked by a concurrent peer" from "genuinely not found / revoked".
+            // A plain SELECT (no SKIP LOCKED) will wait briefly for any holding lock to release,
+            // then return the row (possibly now rotated by the winner, with replacedBy set).
+            const fallback = await oneOrNone(
+                sql`
+                    SELECT "replacedBy", "revokedAt" FROM refresh_tokens
+                    WHERE "tokenHash" = ${opts.oldTokenHash}
+                      AND "expiresAt" > NOW()
+                    LIMIT 1
+                `,
+                z.object({ replacedBy: z.number().nullable(), revokedAt: z.coerce.date().nullable() }),
+            );
+            if (fallback?.replacedBy !== null && fallback?.replacedBy !== undefined) {
+                // Row was just rotated by a concurrent peer — caller should return 409
+                return { ok: false, reason: "locked" };
+            }
+            return { ok: false, reason: "not_found" };
+        }
 
         if (old.replacedBy !== null) {
             // Token has already been rotated — this is a reuse attempt.
@@ -73,7 +96,7 @@ export async function rotateRefreshToken(opts: {
                     WHERE "family" = ${old.family}
                 `,
             );
-            return null;
+            return { ok: false, reason: "reuse" };
         }
 
         const newToken = await one(
@@ -93,7 +116,7 @@ export async function rotateRefreshToken(opts: {
             `,
         );
 
-        return newToken;
+        return { ok: true, token: newToken };
     });
 }
 

@@ -18,6 +18,7 @@ export default function EventItem({ event }: EventItemProps) {
     const router = useRouter();
 
     const [mode, setMode] = useState<"view" | "edit">("view");
+    const [type, setType] = useState<"event" | "tracking">(event.type === "tracking" ? "tracking" : "event");
     const [title, setTitle] = useState(event.title);
     const [date, setDate] = useState(event.date);
     const [startTime, setStartTime] = useState(event.startTime?.slice(0, 5) ?? "");
@@ -28,6 +29,7 @@ export default function EventItem({ event }: EventItemProps) {
     const [confirmDelete, setConfirmDelete] = useState(false);
 
     function enterEdit() {
+        setType(event.type === "tracking" ? "tracking" : "event");
         setTitle(event.title);
         setDate(event.date);
         setStartTime(event.startTime?.slice(0, 5) ?? "");
@@ -44,6 +46,7 @@ export default function EventItem({ event }: EventItemProps) {
         try {
             await updateCalendarEvent({
                 eventId: event.eventId,
+                type,
                 title,
                 date,
                 startTime: startTime || null,
@@ -91,6 +94,27 @@ export default function EventItem({ event }: EventItemProps) {
         return (
             <li style={liStyle}>
                 <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    <div style={{ display: "flex", gap: 0, borderRadius: 4, overflow: "hidden", border: "1px solid #ccc" }}>
+                        {(["event", "tracking"] as const).map((opt) => (
+                            <button
+                                key={opt}
+                                type="button"
+                                onClick={() => setType(opt)}
+                                style={{
+                                    flex: 1,
+                                    padding: "6px 0",
+                                    fontSize: 13,
+                                    border: "none",
+                                    cursor: "pointer",
+                                    backgroundColor: type === opt ? "#0070f3" : "white",
+                                    color: type === opt ? "white" : "#555",
+                                    fontWeight: type === opt ? "600" : "normal",
+                                }}
+                            >
+                                {t(`type_${opt}`)}
+                            </button>
+                        ))}
+                    </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
                         <label style={{ fontSize: "0.8rem", color: "#666" }}>{t("titleLabel")}</label>
                         <input

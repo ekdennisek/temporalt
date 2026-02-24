@@ -82,6 +82,8 @@
     "startTimeLabel": "Starttid (valfri)",
     "endTimeLabel": "Sluttid (valfri)",
     "notesLabel": "Anteckningar (valfri)",
+    "type_event": "Händelse",
+    "type_tracking": "Uppföljning",
     "errorGeneric": "Det gick inte att spara händelsen.",
     "errorDelete": "Det gick inte att ta bort händelsen."
   },

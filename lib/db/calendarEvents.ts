@@ -60,6 +60,7 @@ export async function updateEvent(
     userId: number,
     eventId: number,
     data: {
+        type?: string;
         title: string;
         date: string;
         startTime?: string | null;
@@ -71,6 +72,7 @@ export async function updateEvent(
         sql`
             UPDATE calendar_events
             SET
+                "type"      = ${data.type ?? "event"},
                 "title"     = ${data.title},
                 "date"      = ${data.date},
                 "startTime" = ${data.startTime ?? null},

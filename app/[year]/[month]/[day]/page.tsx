@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
 import { getSessionUser } from "@/lib/auth/session";
 import { getEventsForDate } from "@/lib/db/calendarEvents";
+import EventItem from "@/components/EventItem";
 
 interface PageProps {
   params: Promise<{
@@ -143,30 +144,7 @@ export default async function DayPage({ params }: PageProps) {
             }}
           >
             {events.map((event) => (
-              <li
-                key={event.eventId}
-                style={{
-                  padding: "0.5rem 0.75rem",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "6px",
-                  textAlign: "left",
-                  fontSize: "0.95rem",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
-                  {event.startTime && (
-                    <span style={{ color: "#666", fontSize: "0.85rem", flexShrink: 0 }}>
-                      {event.startTime.slice(0, 5)}
-                    </span>
-                  )}
-                  <span>{event.title}</span>
-                </div>
-                {event.notes && (
-                  <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "#888" }}>
-                    {event.notes}
-                  </p>
-                )}
-              </li>
+              <EventItem key={event.eventId} event={event} />
             ))}
           </ul>
         )}

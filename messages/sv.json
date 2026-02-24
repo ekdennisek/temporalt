@@ -69,6 +69,22 @@
     "logIn": "Logga in",
     "register": "Registrera"
   },
+  "eventItem": {
+    "edit": "Redigera",
+    "delete": "Ta bort",
+    "confirmDelete": "Bekräfta",
+    "cancel": "Avbryt",
+    "deleting": "Tar bort…",
+    "save": "Spara",
+    "saving": "Sparar…",
+    "titleLabel": "Titel",
+    "dateLabel": "Datum",
+    "startTimeLabel": "Starttid (valfri)",
+    "endTimeLabel": "Sluttid (valfri)",
+    "notesLabel": "Anteckningar (valfri)",
+    "errorGeneric": "Det gick inte att spara händelsen.",
+    "errorDelete": "Det gick inte att ta bort händelsen."
+  },
   "createEventFAB": {
     "ariaLabel": "Skapa händelse",
     "titleLabel": "Titel",

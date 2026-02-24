@@ -1,6 +1,6 @@
 import sql from "sql-template-tag";
 import { z } from "zod";
-import { many, one } from "../queries";
+import { many, none, one } from "../queries";
 
 export const CalendarEventSchema = z.object({
     eventId: z.number(),
@@ -53,6 +53,48 @@ export async function getEventsForDate(
             ORDER BY "startTime" NULLS LAST
         `,
         CalendarEventSchema,
+    );
+}
+
+export async function updateEvent(
+    userId: number,
+    eventId: number,
+    data: {
+        title: string;
+        date: string;
+        startTime?: string | null;
+        endTime?: string | null;
+        notes?: string | null;
+    },
+): Promise<CalendarEvent> {
+    return one(
+        sql`
+            UPDATE calendar_events
+            SET
+                "title"     = ${data.title},
+                "date"      = ${data.date},
+                "startTime" = ${data.startTime ?? null},
+                "endTime"   = ${data.endTime ?? null},
+                "notes"     = ${data.notes ?? null},
+                "updatedAt" = NOW()
+            WHERE "eventId" = ${eventId}
+              AND "userId"  = ${userId}
+            RETURNING *
+        `,
+        CalendarEventSchema,
+    );
+}
+
+export async function deleteEvent(
+    userId: number,
+    eventId: number,
+): Promise<number | null> {
+    return none(
+        sql`
+            DELETE FROM calendar_events
+            WHERE "eventId" = ${eventId}
+              AND "userId"  = ${userId}
+        `,
     );
 }
 

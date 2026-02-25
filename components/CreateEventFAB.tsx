@@ -107,8 +107,19 @@ export default function CreateEventFAB() {
                         padding: "16px",
                     }}
                 >
-                    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                        <div style={{ display: "flex", gap: 0, borderRadius: 4, overflow: "hidden", border: "1px solid #ccc" }}>
+                    <form
+                        onSubmit={handleSubmit}
+                        style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                    >
+                        <div
+                            style={{
+                                display: "flex",
+                                gap: 0,
+                                borderRadius: 4,
+                                overflow: "hidden",
+                                border: "1px solid #ccc",
+                            }}
+                        >
                             {(["event", "tracking"] as const).map((opt) => (
                                 <button
                                     key={opt}
@@ -161,7 +172,9 @@ export default function CreateEventFAB() {
                             />
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <label style={{ fontSize: 12, color: "#555" }}>{t("startTimeLabel")}</label>
+                            <label style={{ fontSize: 12, color: "#555" }}>
+                                {t("startTimeLabel")}
+                            </label>
                             <input
                                 type="time"
                                 value={startTime}
@@ -189,9 +202,7 @@ export default function CreateEventFAB() {
                                 }}
                             />
                         </div>
-                        {error && (
-                            <p style={{ fontSize: 13, color: "#c00", margin: 0 }}>{error}</p>
-                        )}
+                        {error && <p style={{ fontSize: 13, color: "#c00", margin: 0 }}>{error}</p>}
                         <button
                             type="submit"
                             disabled={pending}

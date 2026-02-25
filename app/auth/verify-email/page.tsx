@@ -42,7 +42,9 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
             <main style={card}>
                 <h1 style={heading}>{t("invalidTokenHeading")}</h1>
                 <p style={body}>{t("invalidTokenDescription")}</p>
-                <Link href="/auth/register" style={link}>{t("invalidTokenLink")}</Link>
+                <Link href="/auth/register" style={link}>
+                    {t("invalidTokenLink")}
+                </Link>
             </main>
         );
     }
@@ -52,7 +54,9 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
             <main style={card}>
                 <h1 style={heading}>{t("expiredTokenHeading")}</h1>
                 <p style={body}>{t("expiredTokenDescription")}</p>
-                <Link href="/auth/register" style={link}>{t("expiredTokenLink")}</Link>
+                <Link href="/auth/register" style={link}>
+                    {t("expiredTokenLink")}
+                </Link>
             </main>
         );
     }
@@ -62,7 +66,9 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
         <main style={card}>
             <h1 style={heading}>{t("errorHeading")}</h1>
             <p style={body}>{t("errorDescription")}</p>
-            <Link href="/auth/register" style={link}>{t("errorLink")}</Link>
+            <Link href="/auth/register" style={link}>
+                {t("errorLink")}
+            </Link>
         </main>
     );
 }

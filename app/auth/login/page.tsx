@@ -27,7 +27,9 @@ export default function LoginPage() {
 
     return (
         <main style={card}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "#111" }}>{t("heading")}</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "#111" }}>
+                {t("heading")}
+            </h1>
             <section>
                 <LoginForm onEmailChange={setEmail} />
             </section>
@@ -37,7 +39,9 @@ export default function LoginPage() {
             </section>
             <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: "#555" }}>
                 {t("noAccount")}{" "}
-                <Link href="/auth/register" style={{ color: "#0070f3" }}>{t("createOne")}</Link>
+                <Link href="/auth/register" style={{ color: "#0070f3" }}>
+                    {t("createOne")}
+                </Link>
             </p>
         </main>
     );

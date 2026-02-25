@@ -4,10 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { CalendarEvent } from "@/lib/db/calendarEvents";
-import {
-    updateCalendarEvent,
-    deleteCalendarEvent,
-} from "@/lib/actions/calendarEvents";
+import { updateCalendarEvent, deleteCalendarEvent } from "@/lib/actions/calendarEvents";
 
 interface EventItemProps {
     event: CalendarEvent;
@@ -18,7 +15,9 @@ export default function EventItem({ event }: EventItemProps) {
     const router = useRouter();
 
     const [mode, setMode] = useState<"view" | "edit">("view");
-    const [type, setType] = useState<"event" | "tracking">(event.type === "tracking" ? "tracking" : "event");
+    const [type, setType] = useState<"event" | "tracking">(
+        event.type === "tracking" ? "tracking" : "event",
+    );
     const [title, setTitle] = useState(event.title);
     const [date, setDate] = useState(event.date);
     const [startTime, setStartTime] = useState(event.startTime?.slice(0, 5) ?? "");
@@ -93,8 +92,19 @@ export default function EventItem({ event }: EventItemProps) {
     if (mode === "edit") {
         return (
             <li style={liStyle}>
-                <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                    <div style={{ display: "flex", gap: 0, borderRadius: 4, overflow: "hidden", border: "1px solid #ccc" }}>
+                <form
+                    onSubmit={handleSave}
+                    style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: 0,
+                            borderRadius: 4,
+                            overflow: "hidden",
+                            border: "1px solid #ccc",
+                        }}
+                    >
                         {(["event", "tracking"] as const).map((opt) => (
                             <button
                                 key={opt}
@@ -116,60 +126,119 @@ export default function EventItem({ event }: EventItemProps) {
                         ))}
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "#666" }}>{t("titleLabel")}</label>
+                        <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                            {t("titleLabel")}
+                        </label>
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
-                            style={{ padding: "0.25rem 0.4rem", fontSize: "0.9rem", borderRadius: "4px", border: "1px solid #ccc" }}
+                            style={{
+                                padding: "0.25rem 0.4rem",
+                                fontSize: "0.9rem",
+                                borderRadius: "4px",
+                                border: "1px solid #ccc",
+                            }}
                         />
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "#666" }}>{t("dateLabel")}</label>
+                        <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                            {t("dateLabel")}
+                        </label>
                         <input
                             type="date"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
                             required
-                            style={{ padding: "0.25rem 0.4rem", fontSize: "0.9rem", borderRadius: "4px", border: "1px solid #ccc" }}
+                            style={{
+                                padding: "0.25rem 0.4rem",
+                                fontSize: "0.9rem",
+                                borderRadius: "4px",
+                                border: "1px solid #ccc",
+                            }}
                         />
                     </div>
                     <div style={{ display: "flex", gap: "0.5rem" }}>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem", flex: 1 }}>
-                            <label style={{ fontSize: "0.8rem", color: "#666" }}>{t("startTimeLabel")}</label>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "0.2rem",
+                                flex: 1,
+                            }}
+                        >
+                            <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                {t("startTimeLabel")}
+                            </label>
                             <input
                                 type="time"
                                 value={startTime}
                                 onChange={(e) => setStartTime(e.target.value)}
-                                style={{ padding: "0.25rem 0.4rem", fontSize: "0.9rem", borderRadius: "4px", border: "1px solid #ccc" }}
+                                style={{
+                                    padding: "0.25rem 0.4rem",
+                                    fontSize: "0.9rem",
+                                    borderRadius: "4px",
+                                    border: "1px solid #ccc",
+                                }}
                             />
                         </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem", flex: 1 }}>
-                            <label style={{ fontSize: "0.8rem", color: "#666" }}>{t("endTimeLabel")}</label>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "0.2rem",
+                                flex: 1,
+                            }}
+                        >
+                            <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                {t("endTimeLabel")}
+                            </label>
                             <input
                                 type="time"
                                 value={endTime}
                                 onChange={(e) => setEndTime(e.target.value)}
-                                style={{ padding: "0.25rem 0.4rem", fontSize: "0.9rem", borderRadius: "4px", border: "1px solid #ccc" }}
+                                style={{
+                                    padding: "0.25rem 0.4rem",
+                                    fontSize: "0.9rem",
+                                    borderRadius: "4px",
+                                    border: "1px solid #ccc",
+                                }}
                             />
                         </div>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "#666" }}>{t("notesLabel")}</label>
+                        <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                            {t("notesLabel")}
+                        </label>
                         <textarea
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             rows={3}
-                            style={{ padding: "0.25rem 0.4rem", fontSize: "0.9rem", borderRadius: "4px", border: "1px solid #ccc", resize: "vertical" }}
+                            style={{
+                                padding: "0.25rem 0.4rem",
+                                fontSize: "0.9rem",
+                                borderRadius: "4px",
+                                border: "1px solid #ccc",
+                                resize: "vertical",
+                            }}
                         />
                     </div>
-                    {error && <p style={{ margin: 0, fontSize: "0.8rem", color: "#c00" }}>{error}</p>}
+                    {error && (
+                        <p style={{ margin: 0, fontSize: "0.8rem", color: "#c00" }}>{error}</p>
+                    )}
                     <div style={{ display: "flex", gap: "0.5rem" }}>
                         <button
                             type="submit"
                             disabled={pending}
-                            style={{ ...btnBase, padding: "0.3rem 0.75rem", background: "#0070f3", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                            style={{
+                                ...btnBase,
+                                padding: "0.3rem 0.75rem",
+                                background: "#0070f3",
+                                color: "#fff",
+                                borderRadius: "4px",
+                                fontSize: "0.85rem",
+                            }}
                         >
                             {pending ? t("saving") : t("save")}
                         </button>
@@ -177,7 +246,13 @@ export default function EventItem({ event }: EventItemProps) {
                             type="button"
                             onClick={() => setMode("view")}
                             disabled={pending}
-                            style={{ ...btnBase, padding: "0.3rem 0.75rem", border: "1px solid #ccc", borderRadius: "4px", fontSize: "0.85rem" }}
+                            style={{
+                                ...btnBase,
+                                padding: "0.3rem 0.75rem",
+                                border: "1px solid #ccc",
+                                borderRadius: "4px",
+                                fontSize: "0.85rem",
+                            }}
                         >
                             {t("cancel")}
                         </button>
@@ -200,7 +275,10 @@ export default function EventItem({ event }: EventItemProps) {
                     {t("edit")}
                 </button>
                 {!confirmDelete ? (
-                    <button onClick={() => setConfirmDelete(true)} style={{ ...btnBase, color: "#c00" }}>
+                    <button
+                        onClick={() => setConfirmDelete(true)}
+                        style={{ ...btnBase, color: "#c00" }}
+                    >
                         {t("delete")}
                     </button>
                 ) : (
@@ -227,7 +305,9 @@ export default function EventItem({ event }: EventItemProps) {
                     {event.notes}
                 </p>
             )}
-            {error && <p style={{ margin: "0.25rem 0 0", fontSize: "0.8rem", color: "#c00" }}>{error}</p>}
+            {error && (
+                <p style={{ margin: "0.25rem 0 0", fontSize: "0.8rem", color: "#c00" }}>{error}</p>
+            )}
         </li>
     );
 }

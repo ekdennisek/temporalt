@@ -52,10 +52,7 @@ export async function runMigrations(): Promise<void> {
     `);
 
     const migrations = await discoverMigrations();
-    const applied = await many(
-        `SELECT "migrationId" FROM schema_migrations`,
-        migrationIdSchema,
-    );
+    const applied = await many(`SELECT "migrationId" FROM schema_migrations`, migrationIdSchema);
     const appliedIds = new Set(applied.map((r) => r.migrationId));
     const pending = migrations.filter((m) => !appliedIds.has(m.id));
 

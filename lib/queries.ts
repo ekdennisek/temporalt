@@ -11,10 +11,7 @@ types.setTypeParser(types.builtins.DATE, (value) => value); // DATE -> string
 types.setTypeParser(types.builtins.INT8, (value) => parseInt(value, 10)); // INT8 -> number
 types.setTypeParser(types.builtins.NUMERIC, (value) => parseFloat(value)); // NUMERIC -> number
 
-async function executeQuery<T extends QueryResultRow>(
-    query: SqlLike,
-    schema?: ZodType<T>,
-) {
+async function executeQuery<T extends QueryResultRow>(query: SqlLike, schema?: ZodType<T>) {
     let client = asyncLocalStorage.getStore();
     const releaseWhenDone = client === undefined;
     if (!client) {
@@ -39,28 +36,19 @@ export async function none(query: SqlLike) {
     return rowCount;
 }
 
-export async function oneOrNone<T extends QueryResultRow>(
-    query: SqlLike,
-    schema: ZodType<T>,
-) {
+export async function oneOrNone<T extends QueryResultRow>(query: SqlLike, schema: ZodType<T>) {
     const { rows } = await executeQuery<T>(query, schema);
     if (rows.length > 1) throw new Error("Expected one or zero rows");
     return rows.length ? rows[0] : undefined;
 }
 
-export async function one<T extends QueryResultRow>(
-    query: SqlLike,
-    schema: ZodType<T>,
-) {
+export async function one<T extends QueryResultRow>(query: SqlLike, schema: ZodType<T>) {
     const { rows } = await executeQuery<T>(query, schema);
     if (rows.length !== 1) throw new Error("Expected exactly one row");
     return rows[0];
 }
 
-export async function many<T extends QueryResultRow>(
-    query: SqlLike,
-    schema: ZodType<T>,
-) {
+export async function many<T extends QueryResultRow>(query: SqlLike, schema: ZodType<T>) {
     const { rows } = await executeQuery<T>(query, schema);
     return rows;
 }

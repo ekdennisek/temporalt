@@ -17,9 +17,7 @@ export async function GET(request: NextRequest) {
     const rawToken = request.nextUrl.searchParams.get("token");
 
     if (!rawToken) {
-        return NextResponse.redirect(
-            new URL("/auth/register?error=missing_token", request.url),
-        );
+        return NextResponse.redirect(new URL("/auth/register?error=missing_token", request.url));
     }
 
     const tokenHash = hashActivationToken(rawToken);
@@ -32,16 +30,12 @@ export async function GET(request: NextRequest) {
     });
 
     if (!activationToken) {
-        return NextResponse.redirect(
-            new URL("/auth/register?error=invalid_token", request.url),
-        );
+        return NextResponse.redirect(new URL("/auth/register?error=invalid_token", request.url));
     }
 
     const user = await findUserById(activationToken.userId);
     if (!user || user.status !== "active") {
-        return NextResponse.redirect(
-            new URL("/auth/register?error=invalid_token", request.url),
-        );
+        return NextResponse.redirect(new URL("/auth/register?error=invalid_token", request.url));
     }
 
     // Issue tokens so the user is logged in immediately after verification

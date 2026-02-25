@@ -1,8 +1,8 @@
-import { calculateEaster } from './easterCalculation';
+import { calculateEaster } from "./easterCalculation";
 
 export interface MovableHoliday {
-  date: Date;
-  name: string;
+    date: Date;
+    name: string;
 }
 
 /**
@@ -10,17 +10,17 @@ export interface MovableHoliday {
  * Friday before Easter Sunday (Easter - 2 days)
  */
 export function getGoodFriday(year: number): Date {
-  const easter = calculateEaster(year);
-  const goodFriday = new Date(easter);
-  goodFriday.setDate(easter.getDate() - 2);
-  return goodFriday;
+    const easter = calculateEaster(year);
+    const goodFriday = new Date(easter);
+    goodFriday.setDate(easter.getDate() - 2);
+    return goodFriday;
 }
 
 /**
  * Calculate Easter Sunday (Påskdagen)
  */
 export function getEasterSunday(year: number): Date {
-  return calculateEaster(year);
+    return calculateEaster(year);
 }
 
 /**
@@ -28,10 +28,10 @@ export function getEasterSunday(year: number): Date {
  * Monday after Easter Sunday (Easter + 1 day)
  */
 export function getEasterMonday(year: number): Date {
-  const easter = calculateEaster(year);
-  const easterMonday = new Date(easter);
-  easterMonday.setDate(easter.getDate() + 1);
-  return easterMonday;
+    const easter = calculateEaster(year);
+    const easterMonday = new Date(easter);
+    easterMonday.setDate(easter.getDate() + 1);
+    return easterMonday;
 }
 
 /**
@@ -39,10 +39,10 @@ export function getEasterMonday(year: number): Date {
  * Always a Thursday, 39 days after Easter Sunday
  */
 export function getAscensionDay(year: number): Date {
-  const easter = calculateEaster(year);
-  const ascensionDay = new Date(easter);
-  ascensionDay.setDate(easter.getDate() + 39);
-  return ascensionDay;
+    const easter = calculateEaster(year);
+    const ascensionDay = new Date(easter);
+    ascensionDay.setDate(easter.getDate() + 39);
+    return ascensionDay;
 }
 
 /**
@@ -50,10 +50,10 @@ export function getAscensionDay(year: number): Date {
  * 7th Sunday after Easter (Easter + 49 days)
  */
 export function getPentecost(year: number): Date {
-  const easter = calculateEaster(year);
-  const pentecost = new Date(easter);
-  pentecost.setDate(easter.getDate() + 49);
-  return pentecost;
+    const easter = calculateEaster(year);
+    const pentecost = new Date(easter);
+    pentecost.setDate(easter.getDate() + 49);
+    return pentecost;
 }
 
 /**
@@ -61,19 +61,19 @@ export function getPentecost(year: number): Date {
  * Always a Saturday between June 20-26
  */
 export function getMidsummer(year: number): Date {
-  // Start with June 20
-  const date = new Date(year, 5, 20); // Month 5 = June (0-indexed)
+    // Start with June 20
+    const date = new Date(year, 5, 20); // Month 5 = June (0-indexed)
 
-  // Get day of week (0 = Sunday, 6 = Saturday)
-  const dayOfWeek = date.getDay();
+    // Get day of week (0 = Sunday, 6 = Saturday)
+    const dayOfWeek = date.getDay();
 
-  // Calculate days until Saturday
-  const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
+    // Calculate days until Saturday
+    const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
 
-  // Add days to reach Saturday
-  date.setDate(20 + daysUntilSaturday);
+    // Add days to reach Saturday
+    date.setDate(20 + daysUntilSaturday);
 
-  return date;
+    return date;
 }
 
 /**
@@ -81,19 +81,19 @@ export function getMidsummer(year: number): Date {
  * Always a Saturday between October 31 - November 6
  */
 export function getAllSaintsDay(year: number): Date {
-  // Start with October 31
-  const date = new Date(year, 9, 31); // Month 9 = October (0-indexed)
+    // Start with October 31
+    const date = new Date(year, 9, 31); // Month 9 = October (0-indexed)
 
-  // Get day of week (0 = Sunday, 6 = Saturday)
-  const dayOfWeek = date.getDay();
+    // Get day of week (0 = Sunday, 6 = Saturday)
+    const dayOfWeek = date.getDay();
 
-  // Calculate days until Saturday
-  const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
+    // Calculate days until Saturday
+    const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
 
-  // Add days to reach Saturday
-  date.setDate(31 + daysUntilSaturday);
+    // Add days to reach Saturday
+    date.setDate(31 + daysUntilSaturday);
 
-  return date;
+    return date;
 }
 
 /**
@@ -101,48 +101,48 @@ export function getAllSaintsDay(year: number): Date {
  * Returns a Map with date keys (YYYY-MM-DD format) and holiday info
  */
 export function getMovableHolidays(year: number): Map<string, MovableHoliday> {
-  const holidays = new Map<string, MovableHoliday>();
+    const holidays = new Map<string, MovableHoliday>();
 
-  const movableHolidays = [
-    { date: getGoodFriday(year), name: 'Långfredagen' },
-    { date: getEasterSunday(year), name: 'Påskdagen' },
-    { date: getEasterMonday(year), name: 'Annandag påsk' },
-    { date: getAscensionDay(year), name: 'Kristi himmelfärdsdag' },
-    { date: getPentecost(year), name: 'Pingstdagen' },
-    { date: getMidsummer(year), name: 'Midsommardagen' },
-    { date: getAllSaintsDay(year), name: 'Alla helgons dag' },
-  ];
+    const movableHolidays = [
+        { date: getGoodFriday(year), name: "Långfredagen" },
+        { date: getEasterSunday(year), name: "Påskdagen" },
+        { date: getEasterMonday(year), name: "Annandag påsk" },
+        { date: getAscensionDay(year), name: "Kristi himmelfärdsdag" },
+        { date: getPentecost(year), name: "Pingstdagen" },
+        { date: getMidsummer(year), name: "Midsommardagen" },
+        { date: getAllSaintsDay(year), name: "Alla helgons dag" },
+    ];
 
-  movableHolidays.forEach(holiday => {
-    const key = formatDateKey(holiday.date);
-    holidays.set(key, holiday);
-  });
+    movableHolidays.forEach((holiday) => {
+        const key = formatDateKey(holiday.date);
+        holidays.set(key, holiday);
+    });
 
-  return holidays;
+    return holidays;
 }
 
 /**
  * Helper function to format a date as YYYY-MM-DD string for use as a Map key
  */
 function formatDateKey(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 }
 
 /**
  * Check if a given date is a Swedish movable holiday
  */
 export function isMovableHoliday(date: Date): { isHoliday: boolean; name?: string } {
-  const year = date.getFullYear();
-  const holidays = getMovableHolidays(year);
-  const key = formatDateKey(date);
+    const year = date.getFullYear();
+    const holidays = getMovableHolidays(year);
+    const key = formatDateKey(date);
 
-  const holiday = holidays.get(key);
-  if (holiday) {
-    return { isHoliday: true, name: holiday.name };
-  }
+    const holiday = holidays.get(key);
+    if (holiday) {
+        return { isHoliday: true, name: holiday.name };
+    }
 
-  return { isHoliday: false };
+    return { isHoliday: false };
 }

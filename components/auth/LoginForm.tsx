@@ -49,12 +49,27 @@ export function LoginForm({ onEmailChange }: Props) {
     return (
         <form onSubmit={handleSubmit}>
             {error && (
-                <p role="alert" style={{ color: "#c00", background: "#ffe6e6", padding: "8px 12px", borderRadius: 4, fontSize: 14, marginBottom: 12 }}>
+                <p
+                    role="alert"
+                    style={{
+                        color: "#c00",
+                        background: "#ffe6e6",
+                        padding: "8px 12px",
+                        borderRadius: 4,
+                        fontSize: 14,
+                        marginBottom: 12,
+                    }}
+                >
                     {error}
                 </p>
             )}
             <div style={{ marginBottom: 16 }}>
-                <label htmlFor="email" style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}>{t("email")}</label>
+                <label
+                    htmlFor="email"
+                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}
+                >
+                    {t("email")}
+                </label>
                 <input
                     id="email"
                     name="email"
@@ -62,24 +77,54 @@ export function LoginForm({ onEmailChange }: Props) {
                     required
                     autoComplete="email"
                     onChange={(e) => onEmailChange?.(e.target.value)}
-                    style={{ display: "block", width: "100%", padding: "8px 12px", border: "1px solid #ddd", borderRadius: 6, fontSize: 14 }}
+                    style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "8px 12px",
+                        border: "1px solid #ddd",
+                        borderRadius: 6,
+                        fontSize: 14,
+                    }}
                 />
             </div>
             <div style={{ marginBottom: 16 }}>
-                <label htmlFor="password" style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}>{t("password")}</label>
+                <label
+                    htmlFor="password"
+                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}
+                >
+                    {t("password")}
+                </label>
                 <input
                     id="password"
                     name="password"
                     type="password"
                     required
                     autoComplete="current-password"
-                    style={{ display: "block", width: "100%", padding: "8px 12px", border: "1px solid #ddd", borderRadius: 6, fontSize: 14 }}
+                    style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "8px 12px",
+                        border: "1px solid #ddd",
+                        borderRadius: 6,
+                        fontSize: 14,
+                    }}
                 />
             </div>
             <button
                 type="submit"
                 disabled={loading}
-                style={{ width: "100%", padding: "10px 0", background: "#0070f3", color: "white", border: "none", borderRadius: 6, fontSize: 15, cursor: "pointer", marginTop: 4, opacity: loading ? 0.7 : 1 }}
+                style={{
+                    width: "100%",
+                    padding: "10px 0",
+                    background: "#0070f3",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 6,
+                    fontSize: 15,
+                    cursor: "pointer",
+                    marginTop: 4,
+                    opacity: loading ? 0.7 : 1,
+                }}
             >
                 {loading ? t("loggingIn") : t("logIn")}
             </button>

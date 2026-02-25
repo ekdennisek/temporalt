@@ -7,7 +7,7 @@ export const CalendarEventSchema = z.object({
     userId: z.number(),
     type: z.string(),
     title: z.string(),
-    date: z.string(),       // "YYYY-MM-DD" (DATE parsed as string by pg type parser)
+    date: z.string(), // "YYYY-MM-DD" (DATE parsed as string by pg type parser)
     startTime: z.string().nullable(),
     endTime: z.string().nullable(),
     notes: z.string().nullable(),
@@ -23,9 +23,8 @@ export async function getEventsForMonth(
     month: number,
 ): Promise<CalendarEvent[]> {
     const firstDay = `${year}-${String(month).padStart(2, "0")}-01`;
-    const nextMonth = month === 12
-        ? `${year + 1}-01-01`
-        : `${year}-${String(month + 1).padStart(2, "0")}-01`;
+    const nextMonth =
+        month === 12 ? `${year + 1}-01-01` : `${year}-${String(month + 1).padStart(2, "0")}-01`;
     return many(
         sql`
             SELECT * FROM calendar_events
@@ -87,10 +86,7 @@ export async function updateEvent(
     );
 }
 
-export async function deleteEvent(
-    userId: number,
-    eventId: number,
-): Promise<number | null> {
+export async function deleteEvent(userId: number, eventId: number): Promise<number | null> {
     return none(
         sql`
             DELETE FROM calendar_events

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 import { z } from "zod";
-import { consumeChallenge, findPasskeyByCredentialId, updatePasskeyCounter } from "@/lib/db/passkeys";
+import {
+    consumeChallenge,
+    findPasskeyByCredentialId,
+    updatePasskeyCounter,
+} from "@/lib/db/passkeys";
 import { findUserById } from "@/lib/db/users";
 import { createRefreshToken } from "@/lib/db/refreshTokens";
 import {
@@ -41,10 +45,7 @@ export async function POST(request: NextRequest) {
 
     const challengeRow = await consumeChallenge(clientChallenge);
     if (!challengeRow || challengeRow.purpose !== "authentication") {
-        return NextResponse.json(
-            { error: "Invalid or expired challenge" },
-            { status: 400 },
-        );
+        return NextResponse.json({ error: "Invalid or expired challenge" }, { status: 400 });
     }
 
     // Look up the passkey by credential ID from the assertion response
@@ -66,7 +67,9 @@ export async function POST(request: NextRequest) {
                 id: passkey.credentialId.toString("base64url"),
                 publicKey: Uint8Array.from(passkey.credentialPublicKey),
                 counter: passkey.counter,
-                transports: passkey.transports as Parameters<typeof verifyAuthenticationResponse>[0]["credential"]["transports"],
+                transports: passkey.transports as Parameters<
+                    typeof verifyAuthenticationResponse
+                >[0]["credential"]["transports"],
             },
         });
     } catch {

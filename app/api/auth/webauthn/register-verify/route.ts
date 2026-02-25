@@ -5,10 +5,7 @@ import { tx } from "@/lib/queries";
 import { consumeChallenge, savePasskey } from "@/lib/db/passkeys";
 import { createUser, findUserByEmail, findUserById } from "@/lib/db/users";
 import { createRefreshToken } from "@/lib/db/refreshTokens";
-import {
-    createActivationToken,
-    invalidateActivationTokens,
-} from "@/lib/db/activationTokens";
+import { createActivationToken, invalidateActivationTokens } from "@/lib/db/activationTokens";
 import {
     generateActivationToken,
     generateRefreshToken,
@@ -50,10 +47,7 @@ export async function POST(request: NextRequest) {
 
     const challengeRow = await consumeChallenge(clientChallenge);
     if (!challengeRow || challengeRow.purpose !== "registration") {
-        return NextResponse.json(
-            { error: "Invalid or expired challenge" },
-            { status: 400 },
-        );
+        return NextResponse.json({ error: "Invalid or expired challenge" }, { status: 400 });
     }
 
     // Verify the submitted email matches the user the challenge was issued for.
@@ -83,8 +77,12 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Verification failed" }, { status: 400 });
     }
 
-    const { credential: cred, aaguid, credentialDeviceType, credentialBackedUp } =
-        verification.registrationInfo;
+    const {
+        credential: cred,
+        aaguid,
+        credentialDeviceType,
+        credentialBackedUp,
+    } = verification.registrationInfo;
 
     const user = await tx(async () => {
         let existingUser = await findUserByEmail(email);

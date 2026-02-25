@@ -1,102 +1,102 @@
 {
-  "dayPage": {
-    "today": "Idag",
-    "tomorrow": "Imorgon",
-    "yesterday": "Igår",
-    "inDays": "Om {days} dagar",
-    "daysAgo": "{days} dagar sedan",
-    "backToCalendar": "← Tillbaka till kalendern"
-  },
-  "loginPage": {
-    "heading": "Logga in",
-    "noAccount": "Inget konto?",
-    "createOne": "Skapa ett"
-  },
-  "registerPage": {
-    "heading": "Skapa konto",
-    "emailAndPassword": "E-post och lösenord",
-    "orUsePasskey": "Eller använd en nyckel",
-    "passkeyDescription": "Ange din e-post ovan och registrera sedan en nyckel."
-  },
-  "verifyEmailPage": {
-    "invalidTokenHeading": "Ogiltig aktiveringslänk",
-    "invalidTokenDescription": "Den här länken är ogiltig eller har redan använts.",
-    "invalidTokenLink": "Begär ett nytt aktiveringsmail",
-    "expiredTokenHeading": "Aktiveringslänken har gått ut",
-    "expiredTokenDescription": "Din aktiveringslänk har gått ut. Registrera dig igen för att få en ny.",
-    "expiredTokenLink": "Registrera dig",
-    "errorHeading": "Något gick fel",
-    "errorDescription": "Försök igen.",
-    "errorLink": "Tillbaka till registrering"
-  },
-  "loginForm": {
-    "email": "E-post",
-    "password": "Lösenord",
-    "loginFailed": "Inloggning misslyckades.",
-    "networkError": "Nätverksfel. Försök igen.",
-    "loggingIn": "Loggar in…",
-    "logIn": "Logga in"
-  },
-  "registerForm": {
-    "email": "E-post",
-    "password": "Lösenord",
-    "registrationFailed": "Registrering misslyckades.",
-    "networkError": "Nätverksfel. Försök igen.",
-    "checkEmail": "Kolla din e-post — vi skickade en aktiveringslänk.",
-    "creatingAccount": "Skapar konto…",
-    "createAccount": "Skapa konto"
-  },
-  "passkeyLoginButton": {
-    "failedToStart": "Det gick inte att starta inloggning med nyckel.",
-    "cancelled": "Inloggning med nyckel avbröts.",
-    "loginFailed": "Inloggning med nyckel misslyckades.",
-    "networkError": "Nätverksfel. Försök igen.",
-    "authenticating": "Autentiserar…",
-    "logInWithPasskey": "Logga in med nyckel"
-  },
-  "passkeyRegisterButton": {
-    "failedToStart": "Det gick inte att starta registrering med nyckel.",
-    "cancelled": "Registrering med nyckel avbröts.",
-    "failedToCreate": "Det gick inte att skapa nyckel.",
-    "registrationFailed": "Registrering med nyckel misslyckades.",
-    "networkError": "Nätverksfel. Försök igen.",
-    "settingUp": "Konfigurerar nyckel…",
-    "registerWithPasskey": "Registrera med nyckel"
-  },
-  "userFAB": {
-    "ariaLabel": "Användarmeny",
-    "logOut": "Logga ut",
-    "logIn": "Logga in",
-    "register": "Registrera"
-  },
-  "eventItem": {
-    "edit": "Redigera",
-    "delete": "Ta bort",
-    "confirmDelete": "Bekräfta",
-    "cancel": "Avbryt",
-    "deleting": "Tar bort…",
-    "save": "Spara",
-    "saving": "Sparar…",
-    "titleLabel": "Titel",
-    "dateLabel": "Datum",
-    "startTimeLabel": "Starttid (valfri)",
-    "endTimeLabel": "Sluttid (valfri)",
-    "notesLabel": "Anteckningar (valfri)",
-    "type_event": "Händelse",
-    "type_tracking": "Uppföljning",
-    "errorGeneric": "Det gick inte att spara händelsen.",
-    "errorDelete": "Det gick inte att ta bort händelsen."
-  },
-  "createEventFAB": {
-    "ariaLabel": "Skapa händelse",
-    "titleLabel": "Titel",
-    "dateLabel": "Datum",
-    "startTimeLabel": "Tid (valfri)",
-    "notesLabel": "Anteckningar (valfri)",
-    "save": "Spara",
-    "saving": "Sparar…",
-    "errorGeneric": "Det gick inte att spara händelsen.",
-    "type_event": "Händelse",
-    "type_tracking": "Uppföljning"
-  }
+    "dayPage": {
+        "today": "Idag",
+        "tomorrow": "Imorgon",
+        "yesterday": "Igår",
+        "inDays": "Om {days} dagar",
+        "daysAgo": "{days} dagar sedan",
+        "backToCalendar": "← Tillbaka till kalendern"
+    },
+    "loginPage": {
+        "heading": "Logga in",
+        "noAccount": "Inget konto?",
+        "createOne": "Skapa ett"
+    },
+    "registerPage": {
+        "heading": "Skapa konto",
+        "emailAndPassword": "E-post och lösenord",
+        "orUsePasskey": "Eller använd en nyckel",
+        "passkeyDescription": "Ange din e-post ovan och registrera sedan en nyckel."
+    },
+    "verifyEmailPage": {
+        "invalidTokenHeading": "Ogiltig aktiveringslänk",
+        "invalidTokenDescription": "Den här länken är ogiltig eller har redan använts.",
+        "invalidTokenLink": "Begär ett nytt aktiveringsmail",
+        "expiredTokenHeading": "Aktiveringslänken har gått ut",
+        "expiredTokenDescription": "Din aktiveringslänk har gått ut. Registrera dig igen för att få en ny.",
+        "expiredTokenLink": "Registrera dig",
+        "errorHeading": "Något gick fel",
+        "errorDescription": "Försök igen.",
+        "errorLink": "Tillbaka till registrering"
+    },
+    "loginForm": {
+        "email": "E-post",
+        "password": "Lösenord",
+        "loginFailed": "Inloggning misslyckades.",
+        "networkError": "Nätverksfel. Försök igen.",
+        "loggingIn": "Loggar in…",
+        "logIn": "Logga in"
+    },
+    "registerForm": {
+        "email": "E-post",
+        "password": "Lösenord",
+        "registrationFailed": "Registrering misslyckades.",
+        "networkError": "Nätverksfel. Försök igen.",
+        "checkEmail": "Kolla din e-post — vi skickade en aktiveringslänk.",
+        "creatingAccount": "Skapar konto…",
+        "createAccount": "Skapa konto"
+    },
+    "passkeyLoginButton": {
+        "failedToStart": "Det gick inte att starta inloggning med nyckel.",
+        "cancelled": "Inloggning med nyckel avbröts.",
+        "loginFailed": "Inloggning med nyckel misslyckades.",
+        "networkError": "Nätverksfel. Försök igen.",
+        "authenticating": "Autentiserar…",
+        "logInWithPasskey": "Logga in med nyckel"
+    },
+    "passkeyRegisterButton": {
+        "failedToStart": "Det gick inte att starta registrering med nyckel.",
+        "cancelled": "Registrering med nyckel avbröts.",
+        "failedToCreate": "Det gick inte att skapa nyckel.",
+        "registrationFailed": "Registrering med nyckel misslyckades.",
+        "networkError": "Nätverksfel. Försök igen.",
+        "settingUp": "Konfigurerar nyckel…",
+        "registerWithPasskey": "Registrera med nyckel"
+    },
+    "userFAB": {
+        "ariaLabel": "Användarmeny",
+        "logOut": "Logga ut",
+        "logIn": "Logga in",
+        "register": "Registrera"
+    },
+    "eventItem": {
+        "edit": "Redigera",
+        "delete": "Ta bort",
+        "confirmDelete": "Bekräfta",
+        "cancel": "Avbryt",
+        "deleting": "Tar bort…",
+        "save": "Spara",
+        "saving": "Sparar…",
+        "titleLabel": "Titel",
+        "dateLabel": "Datum",
+        "startTimeLabel": "Starttid (valfri)",
+        "endTimeLabel": "Sluttid (valfri)",
+        "notesLabel": "Anteckningar (valfri)",
+        "type_event": "Händelse",
+        "type_tracking": "Uppföljning",
+        "errorGeneric": "Det gick inte att spara händelsen.",
+        "errorDelete": "Det gick inte att ta bort händelsen."
+    },
+    "createEventFAB": {
+        "ariaLabel": "Skapa händelse",
+        "titleLabel": "Titel",
+        "dateLabel": "Datum",
+        "startTimeLabel": "Tid (valfri)",
+        "notesLabel": "Anteckningar (valfri)",
+        "save": "Spara",
+        "saving": "Sparar…",
+        "errorGeneric": "Det gick inte att spara händelsen.",
+        "type_event": "Händelse",
+        "type_tracking": "Uppföljning"
+    }
 }

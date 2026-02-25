@@ -4,11 +4,11 @@ import type { NextConfig } from "next";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  productionBrowserSourceMaps: true,
-  experimental: {
-    serverSourceMaps: true,
-  },
+    output: "standalone",
+    productionBrowserSourceMaps: true,
+    experimental: {
+        serverSourceMaps: true,
+    },
 };
 
 export default withNextIntl(nextConfig);

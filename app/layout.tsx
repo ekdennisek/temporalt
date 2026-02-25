@@ -7,27 +7,27 @@ import CreateEventFAB from "@/components/CreateEventFAB";
 import "./globals.css";
 
 export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
+    width: "device-width",
+    initialScale: 1,
 };
 
 export default async function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-  const user = await getSessionUser();
-  return (
-    <html lang={locale}>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          <UserFAB user={user} />
-          {user && <CreateEventFAB />}
-          {children}
-        </NextIntlClientProvider>
-      </body>
-    </html>
-  );
+    const locale = await getLocale();
+    const messages = await getMessages();
+    const user = await getSessionUser();
+    return (
+        <html lang={locale}>
+            <body>
+                <NextIntlClientProvider messages={messages}>
+                    <UserFAB user={user} />
+                    {user && <CreateEventFAB />}
+                    {children}
+                </NextIntlClientProvider>
+            </body>
+        </html>
+    );
 }

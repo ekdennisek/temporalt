@@ -77,7 +77,10 @@ export async function rotateRefreshToken(opts: {
                       AND "expiresAt" > NOW()
                     LIMIT 1
                 `,
-                z.object({ replacedBy: z.number().nullable(), revokedAt: z.coerce.date().nullable() }),
+                z.object({
+                    replacedBy: z.number().nullable(),
+                    revokedAt: z.coerce.date().nullable(),
+                }),
             );
             if (fallback?.replacedBy !== null && fallback?.replacedBy !== undefined) {
                 // Row was just rotated by a concurrent peer — caller should return 409

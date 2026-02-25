@@ -71,7 +71,17 @@ export function PasskeyLoginButton({ email }: Props) {
     return (
         <div>
             {error && (
-                <p role="alert" style={{ color: "#c00", background: "#ffe6e6", padding: "8px 12px", borderRadius: 4, fontSize: 14, marginBottom: 12 }}>
+                <p
+                    role="alert"
+                    style={{
+                        color: "#c00",
+                        background: "#ffe6e6",
+                        padding: "8px 12px",
+                        borderRadius: 4,
+                        fontSize: 14,
+                        marginBottom: 12,
+                    }}
+                >
                     {error}
                 </p>
             )}
@@ -79,7 +89,17 @@ export function PasskeyLoginButton({ email }: Props) {
                 type="button"
                 onClick={handleClick}
                 disabled={loading || !email}
-                style={{ width: "100%", padding: "10px 0", background: "transparent", color: "#0070f3", border: "1px solid #0070f3", borderRadius: 6, fontSize: 15, cursor: "pointer", opacity: (loading || !email) ? 0.5 : 1 }}
+                style={{
+                    width: "100%",
+                    padding: "10px 0",
+                    background: "transparent",
+                    color: "#0070f3",
+                    border: "1px solid #0070f3",
+                    borderRadius: 6,
+                    fontSize: 15,
+                    cursor: "pointer",
+                    opacity: loading || !email ? 0.5 : 1,
+                }}
             >
                 {loading ? t("authenticating") : t("logInWithPasskey")}
             </button>

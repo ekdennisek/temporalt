@@ -2,15 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { tx } from "@/lib/queries";
 import { createUser, findUserByEmail } from "@/lib/db/users";
-import {
-    createActivationToken,
-    invalidateActivationTokens,
-} from "@/lib/db/activationTokens";
+import { createActivationToken, invalidateActivationTokens } from "@/lib/db/activationTokens";
 import { hashPassword } from "@/lib/auth/password";
-import {
-    generateActivationToken,
-    hashActivationToken,
-} from "@/lib/auth/tokens";
+import { generateActivationToken, hashActivationToken } from "@/lib/auth/tokens";
 import { sendMail } from "@/lib/email/mailer";
 import { activationEmail } from "@/lib/email/templates/activation";
 
@@ -31,10 +25,7 @@ export async function POST(request: NextRequest) {
 
     const parsed = BodySchema.safeParse(body);
     if (!parsed.success) {
-        return NextResponse.json(
-            { error: parsed.error.issues[0].message },
-            { status: 400 },
-        );
+        return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
 
     const { email, password } = parsed.data;

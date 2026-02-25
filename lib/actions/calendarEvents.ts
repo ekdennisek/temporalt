@@ -8,8 +8,16 @@ const CreateEventSchema = z.object({
     type: z.enum(["event", "tracking"]).default("event"),
     title: z.string().min(1).max(500),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    startTime: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
-    endTime: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
+    startTime: z
+        .string()
+        .regex(/^\d{2}:\d{2}$/)
+        .nullable()
+        .optional(),
+    endTime: z
+        .string()
+        .regex(/^\d{2}:\d{2}$/)
+        .nullable()
+        .optional(),
     notes: z.string().max(5000).nullable().optional(),
 });
 
@@ -18,14 +26,20 @@ const UpdateEventSchema = z.object({
     type: z.enum(["event", "tracking"]).default("event"),
     title: z.string().min(1).max(500),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    startTime: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
-    endTime: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
+    startTime: z
+        .string()
+        .regex(/^\d{2}:\d{2}$/)
+        .nullable()
+        .optional(),
+    endTime: z
+        .string()
+        .regex(/^\d{2}:\d{2}$/)
+        .nullable()
+        .optional(),
     notes: z.string().max(5000).nullable().optional(),
 });
 
-export async function updateCalendarEvent(
-    data: z.infer<typeof UpdateEventSchema>,
-) {
+export async function updateCalendarEvent(data: z.infer<typeof UpdateEventSchema>) {
     const user = await getSessionUser();
     if (!user) throw new Error("Unauthorized");
 
@@ -49,9 +63,7 @@ export async function deleteCalendarEvent(eventId: number) {
     if (!rowCount) throw new Error("Event not found");
 }
 
-export async function createCalendarEvent(
-    data: z.infer<typeof CreateEventSchema>,
-) {
+export async function createCalendarEvent(data: z.infer<typeof CreateEventSchema>) {
     const user = await getSessionUser();
     if (!user) throw new Error("Unauthorized");
 

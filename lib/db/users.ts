@@ -22,10 +22,7 @@ export async function findUserByEmail(email: string): Promise<User | undefined> 
 }
 
 export async function findUserById(userId: number): Promise<User | undefined> {
-    return oneOrNone(
-        sql`SELECT * FROM users WHERE "userId" = ${userId}`,
-        UserSchema,
-    );
+    return oneOrNone(sql`SELECT * FROM users WHERE "userId" = ${userId}`, UserSchema);
 }
 
 export async function createUser(opts: {
@@ -53,10 +50,7 @@ export async function activateUser(userId: number): Promise<void> {
     );
 }
 
-export async function updatePasswordHash(
-    userId: number,
-    passwordHash: string,
-): Promise<void> {
+export async function updatePasswordHash(userId: number, passwordHash: string): Promise<void> {
     await none(
         sql`
             UPDATE users

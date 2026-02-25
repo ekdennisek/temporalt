@@ -96,16 +96,10 @@ export async function findPasskeyByCredentialId(
     credentialId: Uint8Array,
 ): Promise<Passkey | undefined> {
     const credId = Buffer.from(credentialId);
-    return oneOrNone(
-        sql`SELECT * FROM passkeys WHERE "credentialId" = ${credId}`,
-        PasskeySchema,
-    );
+    return oneOrNone(sql`SELECT * FROM passkeys WHERE "credentialId" = ${credId}`, PasskeySchema);
 }
 
-export async function updatePasskeyCounter(
-    passkeyId: number,
-    counter: number,
-): Promise<void> {
+export async function updatePasskeyCounter(passkeyId: number, counter: number): Promise<void> {
     await none(
         sql`
             UPDATE passkeys

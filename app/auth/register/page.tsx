@@ -26,15 +26,23 @@ export default function RegisterPage() {
 
     return (
         <main style={card}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "#111" }}>{t("heading")}</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, color: "#111" }}>
+                {t("heading")}
+            </h1>
             <section>
-                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, color: "#333" }}>{t("emailAndPassword")}</h2>
+                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, color: "#333" }}>
+                    {t("emailAndPassword")}
+                </h2>
                 <RegisterForm onEmailChange={setEmail} />
             </section>
             <div style={divider} />
             <section>
-                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 8, color: "#333" }}>{t("orUsePasskey")}</h2>
-                <p style={{ fontSize: 13, color: "#666", marginBottom: 12 }}>{t("passkeyDescription")}</p>
+                <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 8, color: "#333" }}>
+                    {t("orUsePasskey")}
+                </h2>
+                <p style={{ fontSize: 13, color: "#666", marginBottom: 12 }}>
+                    {t("passkeyDescription")}
+                </p>
                 <PasskeyRegisterButton email={email} />
             </section>
         </main>

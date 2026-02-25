@@ -43,3 +43,99 @@ svg {
     display: block;
     max-width: 100%;
 }
+
+/* ===== Primitive palette ===== */
+:root {
+    --color-blue-50: #e6f3ff;
+    --color-blue-500: #0070f3;
+    --color-blue-600: #0066cc;
+
+    --color-green-50: #e8f5e8;
+    --color-green-500: #22c55e;
+    --color-green-600: #10b981;
+    --color-green-700: #1a7a1a;
+
+    --color-amber-500: #f59e0b;
+    --color-pink-500: #ec4899;
+
+    --color-red-50: #ffe6e6;
+    --color-red-700: #cc0000;
+
+    --color-neutral-900: #111;
+    --color-neutral-800: #333;
+    --color-neutral-700: #555;
+    --color-neutral-600: #666;
+    --color-neutral-500: #888;
+    --color-neutral-400: #999;
+    --color-neutral-300: #ccc;
+    --color-neutral-250: #ddd;
+    --color-neutral-200: #e0e0e0;
+    --color-neutral-175: #e5e7eb;
+    --color-neutral-150: #eee;
+    --color-neutral-100: #f5f5f5;
+    --color-neutral-0: #fff;
+
+    --color-shadow-light: rgba(0, 0, 0, 0.07);
+    --color-shadow-medium: rgba(0, 0, 0, 0.12);
+    --color-shadow-heavy: rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Semantic tokens (light theme) ===== */
+:root {
+    /* Text */
+    --color-text-heading: var(--color-neutral-900);
+    --color-text-primary: var(--color-neutral-800);
+    --color-text-secondary: var(--color-neutral-700);
+    --color-text-tertiary: var(--color-neutral-600);
+    --color-text-muted: var(--color-neutral-500);
+    --color-text-disabled: var(--color-neutral-400);
+    --color-text-on-primary: var(--color-neutral-0);
+    --color-text-on-chip: var(--color-neutral-0);
+
+    /* Backgrounds */
+    --color-bg-page: var(--color-neutral-0);
+    --color-bg-surface: var(--color-neutral-0);
+    --color-bg-muted: var(--color-neutral-100);
+
+    /* Borders */
+    --color-border-default: var(--color-neutral-250);
+    --color-border-light: var(--color-neutral-150);
+    --color-border-input: var(--color-neutral-300);
+    --color-border-card: var(--color-neutral-200);
+    --color-border-subtle: var(--color-neutral-175);
+
+    /* Interactive */
+    --color-link: var(--color-blue-500);
+    --color-btn-primary-bg: var(--color-blue-500);
+    --color-btn-primary-text: var(--color-neutral-0);
+
+    /* FABs */
+    --color-fab-user-bg: var(--color-blue-500);
+    --color-fab-create-bg: var(--color-green-500);
+
+    /* Event chips */
+    --color-chip-event: var(--color-blue-500);
+    --color-chip-reminder: var(--color-amber-500);
+    --color-chip-birthday: var(--color-pink-500);
+    --color-chip-tracking: var(--color-green-600);
+
+    /* Calendar states */
+    --color-today-bg: var(--color-blue-50);
+    --color-today-text: var(--color-blue-600);
+    --color-holiday-bg: var(--color-red-50);
+    --color-holiday-text: var(--color-red-700);
+
+    /* Feedback */
+    --color-error-text: var(--color-red-700);
+    --color-error-bg: var(--color-red-50);
+    --color-success-text: var(--color-green-700);
+    --color-success-bg: var(--color-green-50);
+
+    /* Shadows (full box-shadow values) */
+    --shadow-card: 0 2px 12px var(--color-shadow-light);
+    --shadow-dropdown: 0 4px 16px var(--color-shadow-medium);
+    --shadow-fab: 0 2px 8px var(--color-shadow-heavy);
+}
+
+/* ===== Dark theme (placeholder) ===== */
+/* [data-theme="dark"] { override semantic tokens here } */

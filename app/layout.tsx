@@ -25,7 +25,7 @@ export default async function RootLayout({
                 <NextIntlClientProvider messages={messages}>
                     <UserFAB user={user} />
                     {user && <CreateEventFAB />}
-                    {children}
+                    <main>{children}</main>
                 </NextIntlClientProvider>
             </body>
         </html>

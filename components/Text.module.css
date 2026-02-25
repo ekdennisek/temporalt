@@ -1,0 +1,30 @@
+.body {
+    color: var(--color-text-secondary);
+    margin-bottom: 20;
+    font-size: 14;
+}
+
+.helper {
+    font-size: 13;
+    color: var(--color-text-tertiary);
+    margin-bottom: 12;
+}
+
+.h1 {
+    font-size: 24;
+    font-weight: 700;
+    margin-bottom: 12;
+    color: var(--color-text-heading);
+}
+
+.h2 {
+    font-size: 15;
+    font-weight: 600;
+    margin-bottom: 12;
+    color: var(--color-text-primary);
+}
+
+.link {
+    color: var(--color-link);
+    font-size: 14;
+}

@@ -83,7 +83,8 @@ export async function middleware(request: NextRequest) {
 
     let refreshResponse: Response;
     try {
-        const refreshUrl = new URL("/api/auth/refresh", request.url).toString();
+        const refreshBase = process.env.INTERNAL_URL ?? request.url;
+        const refreshUrl = new URL("/api/auth/refresh", refreshBase).toString();
         refreshResponse = await fetch(refreshUrl, {
             method: "POST",
             headers: { cookie: request.headers.get("cookie") ?? "" },

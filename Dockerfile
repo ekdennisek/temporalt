@@ -23,4 +23,5 @@ COPY --from=builder /app/db/migrations ./db/migrations
 
 EXPOSE 3000
 ENV HOSTNAME="0.0.0.0"
+ENV INTERNAL_URL="http://localhost:3000"
 CMD ["node", "--enable-source-maps", "server.js"]

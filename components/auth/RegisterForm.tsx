@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 interface Props {
@@ -9,7 +8,6 @@ interface Props {
 }
 
 export function RegisterForm({ onEmailChange }: Props) {
-    const router = useRouter();
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);

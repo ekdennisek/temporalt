@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
-import { tx } from "@/lib/queries";
-import { consumeActivationToken } from "@/lib/db/activationTokens";
-import { activateUser, findUserById } from "@/lib/db/users";
-import { createRefreshToken } from "@/lib/db/refreshTokens";
 import {
     generateRefreshToken,
+    hashActivationToken,
     hashRefreshToken,
     refreshTokenExpiresAt,
     setAuthCookies,
     signAccessToken,
 } from "@/lib/auth/tokens";
-import { hashActivationToken } from "@/lib/auth/tokens";
+import { consumeActivationToken } from "@/lib/db/activationTokens";
+import { createRefreshToken } from "@/lib/db/refreshTokens";
+import { activateUser, findUserById } from "@/lib/db/users";
+import { tx } from "@/lib/queries";
 import { randomUUID } from "crypto";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const rawToken = request.nextUrl.searchParams.get("token");

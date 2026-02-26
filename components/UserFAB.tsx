@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface Props {
     user: { email: string } | null;
@@ -88,7 +89,7 @@ export default function UserFAB({ user }: Props) {
                         </button>
                     ) : (
                         <>
-                            <a
+                            <Link
                                 href="/auth/login"
                                 style={{
                                     display: "block",
@@ -99,8 +100,8 @@ export default function UserFAB({ user }: Props) {
                                 }}
                             >
                                 {t("logIn")}
-                            </a>
-                            <a
+                            </Link>
+                            <Link
                                 href="/auth/register"
                                 style={{
                                     display: "block",
@@ -112,7 +113,7 @@ export default function UserFAB({ user }: Props) {
                                 }}
                             >
                                 {t("register")}
-                            </a>
+                            </Link>
                         </>
                     )}
                 </div>

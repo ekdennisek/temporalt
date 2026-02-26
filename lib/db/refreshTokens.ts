@@ -1,7 +1,6 @@
 import sql from "sql-template-tag";
 import { z } from "zod";
-import { none, one, oneOrNone } from "../queries";
-import { tx } from "../queries";
+import { none, one, oneOrNone, tx } from "../queries";
 
 type RotateResult =
     | { ok: true; token: RefreshToken }

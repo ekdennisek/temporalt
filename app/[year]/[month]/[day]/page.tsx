@@ -4,7 +4,8 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
 import { getSessionUser } from "@/lib/auth/session";
-import { getEventsForDate } from "@/lib/db/calendarEvents";
+import { getEventsForDate, getBirthdaysForDate } from "@/lib/db/calendarEvents";
+import type { CalendarEvent } from "@/lib/db/calendarEvents";
 import EventItem from "@/components/EventItem";
 
 interface PageProps {
@@ -52,6 +53,18 @@ function getRelativeDayText(date: Date, t: Awaited<ReturnType<typeof getTranslat
     }
 }
 
+function birthdaysToEvents(birthdays: CalendarEvent[], year: number, month: number, day: number): CalendarEvent[] {
+    const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    return birthdays.map((b) => {
+        const age = b.birthYear != null ? year - b.birthYear : null;
+        return {
+            ...b,
+            date: dateStr,
+            title: age != null ? `${b.title} (${age})` : b.title,
+        };
+    });
+}
+
 export default async function DayPage({ params }: PageProps) {
     const { year: yearStr, month: monthStr, day: dayStr } = await params;
 
@@ -87,7 +100,15 @@ export default async function DayPage({ params }: PageProps) {
 
     const holidayInfo = isSwedishHoliday(date);
     const relativeText = getRelativeDayText(date, t);
-    const events = user ? await getEventsForDate(user.userId, year, month, day) : [];
+
+    const [regularEvents, birthdays] = user
+        ? await Promise.all([
+              getEventsForDate(user.userId, year, month, day),
+              getBirthdaysForDate(user.userId, year, month, day),
+          ])
+        : [[], []];
+
+    const events = [...regularEvents, ...birthdaysToEvents(birthdays, year, month, day)];
 
     return (
         <main

@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { createCalendarEvent } from "@/lib/actions/calendarEvents";
 
+type EventType = "event" | "tracking" | "birthday";
+
+const TYPE_KEYS: Record<EventType, string> = {
+    event: "typeEvent",
+    tracking: "typeTracking",
+    birthday: "typeBirthday",
+};
+
 function todayAsDateString() {
     const d = new Date();
     const y = d.getFullYear();
@@ -15,11 +23,14 @@ function todayAsDateString() {
 
 export default function CreateEventFAB() {
     const [open, setOpen] = useState(false);
-    const [type, setType] = useState<"event" | "tracking">("event");
+    const [type, setType] = useState<EventType>("event");
     const [title, setTitle] = useState("");
     const [date, setDate] = useState(todayAsDateString);
     const [startTime, setStartTime] = useState("");
     const [notes, setNotes] = useState("");
+    const [birthMonth, setBirthMonth] = useState(1);
+    const [birthDay, setBirthDay] = useState(1);
+    const [birthYear, setBirthYear] = useState("");
     const [pending, setPending] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const ref = useRef<HTMLDivElement>(null);
@@ -42,6 +53,9 @@ export default function CreateEventFAB() {
         setTitle("");
         setStartTime("");
         setNotes("");
+        setBirthMonth(1);
+        setBirthDay(1);
+        setBirthYear("");
         setError(null);
         setOpen((o) => !o);
     }
@@ -51,13 +65,24 @@ export default function CreateEventFAB() {
         setPending(true);
         setError(null);
         try {
-            await createCalendarEvent({
-                type,
-                title,
-                date,
-                startTime: startTime || null,
-                notes: notes || null,
-            });
+            if (type === "birthday") {
+                await createCalendarEvent({
+                    type: "birthday",
+                    title,
+                    birthMonth,
+                    birthDay,
+                    birthYear: birthYear ? parseInt(birthYear, 10) : null,
+                    notes: notes || null,
+                });
+            } else {
+                await createCalendarEvent({
+                    type,
+                    title,
+                    date,
+                    startTime: startTime || null,
+                    notes: notes || null,
+                });
+            }
             setOpen(false);
             router.refresh();
         } catch {
@@ -66,6 +91,13 @@ export default function CreateEventFAB() {
             setPending(false);
         }
     }
+
+    const inputStyle: React.CSSProperties = {
+        padding: "6px 8px",
+        border: "1px solid #ccc",
+        borderRadius: 4,
+        fontSize: 14,
+    };
 
     return (
         <div ref={ref} style={{ position: "fixed", top: 16, right: 68, zIndex: 1000 }}>
@@ -120,7 +152,7 @@ export default function CreateEventFAB() {
                                 border: "1px solid #ccc",
                             }}
                         >
-                            {(["event", "tracking"] as const).map((opt) => (
+                            {(["event", "tracking", "birthday"] as const).map((opt) => (
                                 <button
                                     key={opt}
                                     type="button"
@@ -136,7 +168,7 @@ export default function CreateEventFAB() {
                                         fontWeight: type === opt ? "600" : "normal",
                                     }}
                                 >
-                                    {t(`type_${opt}`)}
+                                    {t(TYPE_KEYS[opt])}
                                 </button>
                             ))}
                         </div>
@@ -148,45 +180,87 @@ export default function CreateEventFAB() {
                                 onChange={(e) => setTitle(e.target.value)}
                                 required
                                 autoFocus
-                                style={{
-                                    padding: "6px 8px",
-                                    border: "1px solid #ccc",
-                                    borderRadius: 4,
-                                    fontSize: 14,
-                                }}
+                                style={inputStyle}
                             />
                         </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <label style={{ fontSize: 12, color: "#555" }}>{t("dateLabel")}</label>
-                            <input
-                                type="date"
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                                required
-                                style={{
-                                    padding: "6px 8px",
-                                    border: "1px solid #ccc",
-                                    borderRadius: 4,
-                                    fontSize: 14,
-                                }}
-                            />
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <label style={{ fontSize: 12, color: "#555" }}>
-                                {t("startTimeLabel")}
-                            </label>
-                            <input
-                                type="time"
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
-                                style={{
-                                    padding: "6px 8px",
-                                    border: "1px solid #ccc",
-                                    borderRadius: 4,
-                                    fontSize: 14,
-                                }}
-                            />
-                        </div>
+                        {type === "birthday" ? (
+                            <>
+                                <div style={{ display: "flex", gap: 8 }}>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
+                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                            {t("birthMonthLabel")}
+                                        </label>
+                                        <select
+                                            value={birthMonth}
+                                            onChange={(e) => setBirthMonth(parseInt(e.target.value, 10))}
+                                            style={inputStyle}
+                                        >
+                                            {Array.from({ length: 12 }, (_, i) => (
+                                                <option key={i + 1} value={i + 1}>
+                                                    {t(`month${i + 1}`)}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
+                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                            {t("birthDayLabel")}
+                                        </label>
+                                        <select
+                                            value={birthDay}
+                                            onChange={(e) => setBirthDay(parseInt(e.target.value, 10))}
+                                            style={inputStyle}
+                                        >
+                                            {Array.from({ length: 31 }, (_, i) => (
+                                                <option key={i + 1} value={i + 1}>
+                                                    {i + 1}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                    <label style={{ fontSize: 12, color: "#555" }}>
+                                        {t("birthYearLabel")}
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={birthYear}
+                                        onChange={(e) => setBirthYear(e.target.value)}
+                                        min={1}
+                                        max={9999}
+                                        placeholder=""
+                                        style={inputStyle}
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                    <label style={{ fontSize: 12, color: "#555" }}>
+                                        {t("dateLabel")}
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={date}
+                                        onChange={(e) => setDate(e.target.value)}
+                                        required
+                                        style={inputStyle}
+                                    />
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                    <label style={{ fontSize: 12, color: "#555" }}>
+                                        {t("startTimeLabel")}
+                                    </label>
+                                    <input
+                                        type="time"
+                                        value={startTime}
+                                        onChange={(e) => setStartTime(e.target.value)}
+                                        style={inputStyle}
+                                    />
+                                </div>
+                            </>
+                        )}
                         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                             <label style={{ fontSize: 12, color: "#555" }}>{t("notesLabel")}</label>
                             <textarea
@@ -194,10 +268,7 @@ export default function CreateEventFAB() {
                                 onChange={(e) => setNotes(e.target.value)}
                                 rows={2}
                                 style={{
-                                    padding: "6px 8px",
-                                    border: "1px solid #ccc",
-                                    borderRadius: 4,
-                                    fontSize: 14,
+                                    ...inputStyle,
                                     resize: "vertical",
                                 }}
                             />

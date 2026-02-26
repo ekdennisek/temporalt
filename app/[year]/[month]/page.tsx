@@ -4,13 +4,34 @@ import { getLocale } from "next-intl/server";
 import Calendar from "@/components/Calendar";
 import CalendarSwipeHandler from "@/components/CalendarSwipeHandler";
 import { getSessionUser } from "@/lib/auth/session";
-import { getEventsForMonth } from "@/lib/db/calendarEvents";
+import { getEventsForMonth, getBirthdaysForMonth } from "@/lib/db/calendarEvents";
+import type { CalendarEvent } from "@/lib/db/calendarEvents";
 
 interface PageProps {
     params: Promise<{
         year: string;
         month: string;
     }>;
+}
+
+function isLeapYear(year: number): boolean {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+function birthdaysToEvents(birthdays: CalendarEvent[], year: number): CalendarEvent[] {
+    return birthdays.map((b) => {
+        let day = b.birthDay!;
+        // Feb 29 birthday in a non-leap year: show on Feb 28
+        if (b.birthMonth === 2 && day === 29 && !isLeapYear(year)) {
+            day = 28;
+        }
+        const age = b.birthYear != null ? year - b.birthYear : null;
+        return {
+            ...b,
+            date: `${year}-${String(b.birthMonth!).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+            title: age != null ? `${b.title} (${age})` : b.title,
+        };
+    });
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -44,22 +65,34 @@ export default async function CalendarPage({ params }: PageProps) {
     const nextYear = month === 12 ? year + 1 : year;
     const nextMonth = month === 12 ? 1 : month + 1;
 
-    const [prevEvents, currentEvents, nextEvents] = user
-        ? await Promise.all([
-              getEventsForMonth(user.userId, prevYear, prevMonth),
-              getEventsForMonth(user.userId, year, month),
-              getEventsForMonth(user.userId, nextYear, nextMonth),
-          ])
-        : [[], [], []];
+    const [prevEvents, currentEvents, nextEvents, prevBirthdays, currentBirthdays, nextBirthdays] =
+        user
+            ? await Promise.all([
+                  getEventsForMonth(user.userId, prevYear, prevMonth),
+                  getEventsForMonth(user.userId, year, month),
+                  getEventsForMonth(user.userId, nextYear, nextMonth),
+                  getBirthdaysForMonth(user.userId, prevYear, prevMonth),
+                  getBirthdaysForMonth(user.userId, year, month),
+                  getBirthdaysForMonth(user.userId, nextYear, nextMonth),
+              ])
+            : [[], [], [], [], [], []];
+
+    const allPrev = [...prevEvents, ...birthdaysToEvents(prevBirthdays, prevYear)];
+    const allCurrent = [...currentEvents, ...birthdaysToEvents(currentBirthdays, year)];
+    const allNext = [...nextEvents, ...birthdaysToEvents(nextBirthdays, nextYear)];
 
     return (
         <CalendarSwipeHandler
             prevHref={`/${prevYear}/${prevMonth}`}
             nextHref={`/${nextYear}/${nextMonth}`}
-            prevContent={<Calendar year={prevYear} month={prevMonth} locale={locale} events={prevEvents} />}
-            nextContent={<Calendar year={nextYear} month={nextMonth} locale={locale} events={nextEvents} />}
+            prevContent={
+                <Calendar year={prevYear} month={prevMonth} locale={locale} events={allPrev} />
+            }
+            nextContent={
+                <Calendar year={nextYear} month={nextMonth} locale={locale} events={allNext} />
+            }
         >
-            <Calendar year={year} month={month} locale={locale} events={currentEvents} />
+            <Calendar year={year} month={month} locale={locale} events={allCurrent} />
         </CalendarSwipeHandler>
     );
 }

@@ -11,6 +11,9 @@ export const CalendarEventSchema = z.object({
     startTime: z.string().nullable(),
     endTime: z.string().nullable(),
     notes: z.string().nullable(),
+    birthMonth: z.number().nullable(),
+    birthDay: z.number().nullable(),
+    birthYear: z.number().nullable(),
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date(),
 });
@@ -29,6 +32,7 @@ export async function getEventsForMonth(
         sql`
             SELECT * FROM calendar_events
             WHERE "userId" = ${userId}
+              AND "type" <> 'birthday'
               AND "date" >= ${firstDay}
               AND "date" < ${nextMonth}
             ORDER BY "date", "startTime" NULLS LAST
@@ -48,8 +52,47 @@ export async function getEventsForDate(
         sql`
             SELECT * FROM calendar_events
             WHERE "userId" = ${userId}
+              AND "type" <> 'birthday'
               AND "date" = ${date}
             ORDER BY "startTime" NULLS LAST
+        `,
+        CalendarEventSchema,
+    );
+}
+
+export async function getBirthdaysForMonth(
+    userId: number,
+    year: number,
+    month: number,
+): Promise<CalendarEvent[]> {
+    return many(
+        sql`
+            SELECT * FROM calendar_events
+            WHERE "userId" = ${userId}
+              AND "type" = 'birthday'
+              AND "birthMonth" = ${month}
+              AND ("birthYear" IS NULL OR "birthYear" <= ${year})
+            ORDER BY "birthDay"
+        `,
+        CalendarEventSchema,
+    );
+}
+
+export async function getBirthdaysForDate(
+    userId: number,
+    year: number,
+    month: number,
+    day: number,
+): Promise<CalendarEvent[]> {
+    return many(
+        sql`
+            SELECT * FROM calendar_events
+            WHERE "userId" = ${userId}
+              AND "type" = 'birthday'
+              AND "birthMonth" = ${month}
+              AND "birthDay" = ${day}
+              AND ("birthYear" IS NULL OR "birthYear" <= ${year})
+            ORDER BY "title"
         `,
         CalendarEventSchema,
     );
@@ -65,19 +108,25 @@ export async function updateEvent(
         startTime?: string | null;
         endTime?: string | null;
         notes?: string | null;
+        birthMonth?: number | null;
+        birthDay?: number | null;
+        birthYear?: number | null;
     },
 ): Promise<CalendarEvent> {
     return one(
         sql`
             UPDATE calendar_events
             SET
-                "type"      = ${data.type ?? "event"},
-                "title"     = ${data.title},
-                "date"      = ${data.date},
-                "startTime" = ${data.startTime ?? null},
-                "endTime"   = ${data.endTime ?? null},
-                "notes"     = ${data.notes ?? null},
-                "updatedAt" = NOW()
+                "type"       = ${data.type ?? "event"},
+                "title"      = ${data.title},
+                "date"       = ${data.date},
+                "startTime"  = ${data.startTime ?? null},
+                "endTime"    = ${data.endTime ?? null},
+                "notes"      = ${data.notes ?? null},
+                "birthMonth" = ${data.birthMonth ?? null},
+                "birthDay"   = ${data.birthDay ?? null},
+                "birthYear"  = ${data.birthYear ?? null},
+                "updatedAt"  = NOW()
             WHERE "eventId" = ${eventId}
               AND "userId"  = ${userId}
             RETURNING *
@@ -105,12 +154,15 @@ export async function createEvent(
         startTime?: string | null;
         endTime?: string | null;
         notes?: string | null;
+        birthMonth?: number | null;
+        birthDay?: number | null;
+        birthYear?: number | null;
     },
 ): Promise<CalendarEvent> {
     return one(
         sql`
             INSERT INTO calendar_events
-                ("userId", "type", "title", "date", "startTime", "endTime", "notes")
+                ("userId", "type", "title", "date", "startTime", "endTime", "notes", "birthMonth", "birthDay", "birthYear")
             VALUES (
                 ${userId},
                 ${data.type ?? "event"},
@@ -118,7 +170,10 @@ export async function createEvent(
                 ${data.date},
                 ${data.startTime ?? null},
                 ${data.endTime ?? null},
-                ${data.notes ?? null}
+                ${data.notes ?? null},
+                ${data.birthMonth ?? null},
+                ${data.birthDay ?? null},
+                ${data.birthYear ?? null}
             )
             RETURNING *
         `,

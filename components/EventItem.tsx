@@ -6,6 +6,14 @@ import { useTranslations } from "next-intl";
 import type { CalendarEvent } from "@/lib/db/calendarEvents";
 import { updateCalendarEvent, deleteCalendarEvent } from "@/lib/actions/calendarEvents";
 
+type EventType = "event" | "tracking" | "birthday";
+
+const TYPE_KEYS: Record<EventType, string> = {
+    event: "typeEvent",
+    tracking: "typeTracking",
+    birthday: "typeBirthday",
+};
+
 interface EventItemProps {
     event: CalendarEvent;
 }
@@ -15,25 +23,38 @@ export default function EventItem({ event }: EventItemProps) {
     const router = useRouter();
 
     const [mode, setMode] = useState<"view" | "edit">("view");
-    const [type, setType] = useState<"event" | "tracking">(
-        event.type === "tracking" ? "tracking" : "event",
+    const [type, setType] = useState<EventType>(
+        (["event", "tracking", "birthday"] as const).includes(event.type as EventType)
+            ? (event.type as EventType)
+            : "event",
     );
     const [title, setTitle] = useState(event.title);
     const [date, setDate] = useState(event.date);
     const [startTime, setStartTime] = useState(event.startTime?.slice(0, 5) ?? "");
     const [endTime, setEndTime] = useState(event.endTime?.slice(0, 5) ?? "");
     const [notes, setNotes] = useState(event.notes ?? "");
+    const [birthMonth, setBirthMonth] = useState(event.birthMonth ?? 1);
+    const [birthDay, setBirthDay] = useState(event.birthDay ?? 1);
+    const [birthYear, setBirthYear] = useState(event.birthYear != null ? String(event.birthYear) : "");
     const [pending, setPending] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
     function enterEdit() {
-        setType(event.type === "tracking" ? "tracking" : "event");
-        setTitle(event.title);
+        const eventType: EventType = (["event", "tracking", "birthday"] as const).includes(
+            event.type as EventType,
+        )
+            ? (event.type as EventType)
+            : "event";
+        setType(eventType);
+        setTitle(event.type === "birthday" ? event.title.replace(/\s*\(\d+\)$/, "") : event.title);
         setDate(event.date);
         setStartTime(event.startTime?.slice(0, 5) ?? "");
         setEndTime(event.endTime?.slice(0, 5) ?? "");
         setNotes(event.notes ?? "");
+        setBirthMonth(event.birthMonth ?? 1);
+        setBirthDay(event.birthDay ?? 1);
+        setBirthYear(event.birthYear != null ? String(event.birthYear) : "");
         setError(null);
         setMode("edit");
     }
@@ -43,15 +64,27 @@ export default function EventItem({ event }: EventItemProps) {
         setPending(true);
         setError(null);
         try {
-            await updateCalendarEvent({
-                eventId: event.eventId,
-                type,
-                title,
-                date,
-                startTime: startTime || null,
-                endTime: endTime || null,
-                notes: notes || null,
-            });
+            if (type === "birthday") {
+                await updateCalendarEvent({
+                    eventId: event.eventId,
+                    type: "birthday",
+                    title,
+                    birthMonth,
+                    birthDay,
+                    birthYear: birthYear ? parseInt(birthYear, 10) : null,
+                    notes: notes || null,
+                });
+            } else {
+                await updateCalendarEvent({
+                    eventId: event.eventId,
+                    type,
+                    title,
+                    date,
+                    startTime: startTime || null,
+                    endTime: endTime || null,
+                    notes: notes || null,
+                });
+            }
             setMode("view");
             router.refresh();
         } catch {
@@ -89,6 +122,13 @@ export default function EventItem({ event }: EventItemProps) {
         fontSize: "0.8rem",
     };
 
+    const inputStyle: React.CSSProperties = {
+        padding: "0.25rem 0.4rem",
+        fontSize: "0.9rem",
+        borderRadius: "4px",
+        border: "1px solid #ccc",
+    };
+
     if (mode === "edit") {
         return (
             <li style={liStyle}>
@@ -105,7 +145,7 @@ export default function EventItem({ event }: EventItemProps) {
                             border: "1px solid #ccc",
                         }}
                     >
-                        {(["event", "tracking"] as const).map((opt) => (
+                        {(["event", "tracking", "birthday"] as const).map((opt) => (
                             <button
                                 key={opt}
                                 type="button"
@@ -121,7 +161,7 @@ export default function EventItem({ event }: EventItemProps) {
                                     fontWeight: type === opt ? "600" : "normal",
                                 }}
                             >
-                                {t(`type_${opt}`)}
+                                {t(TYPE_KEYS[opt])}
                             </button>
                         ))}
                     </div>
@@ -134,79 +174,143 @@ export default function EventItem({ event }: EventItemProps) {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
-                            style={{
-                                padding: "0.25rem 0.4rem",
-                                fontSize: "0.9rem",
-                                borderRadius: "4px",
-                                border: "1px solid #ccc",
-                            }}
+                            style={inputStyle}
                         />
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "#666" }}>
-                            {t("dateLabel")}
-                        </label>
-                        <input
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            required
-                            style={{
-                                padding: "0.25rem 0.4rem",
-                                fontSize: "0.9rem",
-                                borderRadius: "4px",
-                                border: "1px solid #ccc",
-                            }}
-                        />
-                    </div>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "0.2rem",
-                                flex: 1,
-                            }}
-                        >
-                            <label style={{ fontSize: "0.8rem", color: "#666" }}>
-                                {t("startTimeLabel")}
-                            </label>
-                            <input
-                                type="time"
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
+                    {type === "birthday" ? (
+                        <>
+                            <div style={{ display: "flex", gap: "0.5rem" }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "0.2rem",
+                                        flex: 1,
+                                    }}
+                                >
+                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                        {t("birthMonthLabel")}
+                                    </label>
+                                    <select
+                                        value={birthMonth}
+                                        onChange={(e) =>
+                                            setBirthMonth(parseInt(e.target.value, 10))
+                                        }
+                                        style={inputStyle}
+                                    >
+                                        {Array.from({ length: 12 }, (_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {t(`month${i + 1}`)}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "0.2rem",
+                                        flex: 1,
+                                    }}
+                                >
+                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                        {t("birthDayLabel")}
+                                    </label>
+                                    <select
+                                        value={birthDay}
+                                        onChange={(e) =>
+                                            setBirthDay(parseInt(e.target.value, 10))
+                                        }
+                                        style={inputStyle}
+                                    >
+                                        {Array.from({ length: 31 }, (_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div
                                 style={{
-                                    padding: "0.25rem 0.4rem",
-                                    fontSize: "0.9rem",
-                                    borderRadius: "4px",
-                                    border: "1px solid #ccc",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "0.2rem",
                                 }}
-                            />
-                        </div>
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "0.2rem",
-                                flex: 1,
-                            }}
-                        >
-                            <label style={{ fontSize: "0.8rem", color: "#666" }}>
-                                {t("endTimeLabel")}
-                            </label>
-                            <input
-                                type="time"
-                                value={endTime}
-                                onChange={(e) => setEndTime(e.target.value)}
+                            >
+                                <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                    {t("birthYearLabel")}
+                                </label>
+                                <input
+                                    type="number"
+                                    value={birthYear}
+                                    onChange={(e) => setBirthYear(e.target.value)}
+                                    min={1}
+                                    max={9999}
+                                    style={inputStyle}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div
                                 style={{
-                                    padding: "0.25rem 0.4rem",
-                                    fontSize: "0.9rem",
-                                    borderRadius: "4px",
-                                    border: "1px solid #ccc",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "0.2rem",
                                 }}
-                            />
-                        </div>
-                    </div>
+                            >
+                                <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                    {t("dateLabel")}
+                                </label>
+                                <input
+                                    type="date"
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    required
+                                    style={inputStyle}
+                                />
+                            </div>
+                            <div style={{ display: "flex", gap: "0.5rem" }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "0.2rem",
+                                        flex: 1,
+                                    }}
+                                >
+                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                        {t("startTimeLabel")}
+                                    </label>
+                                    <input
+                                        type="time"
+                                        value={startTime}
+                                        onChange={(e) => setStartTime(e.target.value)}
+                                        style={inputStyle}
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "0.2rem",
+                                        flex: 1,
+                                    }}
+                                >
+                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                        {t("endTimeLabel")}
+                                    </label>
+                                    <input
+                                        type="time"
+                                        value={endTime}
+                                        onChange={(e) => setEndTime(e.target.value)}
+                                        style={inputStyle}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
                         <label style={{ fontSize: "0.8rem", color: "#666" }}>
                             {t("notesLabel")}
@@ -216,10 +320,7 @@ export default function EventItem({ event }: EventItemProps) {
                             onChange={(e) => setNotes(e.target.value)}
                             rows={3}
                             style={{
-                                padding: "0.25rem 0.4rem",
-                                fontSize: "0.9rem",
-                                borderRadius: "4px",
-                                border: "1px solid #ccc",
+                                ...inputStyle,
                                 resize: "vertical",
                             }}
                         />

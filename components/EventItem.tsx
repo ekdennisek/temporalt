@@ -281,12 +281,13 @@ export default function EventItem({ event }: EventItemProps) {
                                     }}
                                 >
                                     <label style={{ fontSize: "0.8rem", color: "#666" }}>
-                                        {t("startTimeLabel")}
+                                        {t(type === "event" ? "startTimeLabel" : "startTimeLabelOptional")}
                                     </label>
                                     <input
                                         type="time"
                                         value={startTime}
                                         onChange={(e) => setStartTime(e.target.value)}
+                                        required={type === "event"}
                                         style={inputStyle}
                                     />
                                 </div>

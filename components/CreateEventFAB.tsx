@@ -27,6 +27,7 @@ export default function CreateEventFAB() {
     const [title, setTitle] = useState("");
     const [date, setDate] = useState(todayAsDateString);
     const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
     const [notes, setNotes] = useState("");
     const [birthMonth, setBirthMonth] = useState(1);
     const [birthDay, setBirthDay] = useState(1);
@@ -52,6 +53,7 @@ export default function CreateEventFAB() {
         setDate(todayAsDateString());
         setTitle("");
         setStartTime("");
+        setEndTime("");
         setNotes("");
         setBirthMonth(1);
         setBirthDay(1);
@@ -80,6 +82,7 @@ export default function CreateEventFAB() {
                     title,
                     date,
                     startTime: startTime || null,
+                    endTime: endTime || null,
                     notes: notes || null,
                 });
             }
@@ -248,16 +251,30 @@ export default function CreateEventFAB() {
                                         style={inputStyle}
                                     />
                                 </div>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                                    <label style={{ fontSize: 12, color: "#555" }}>
-                                        {t("startTimeLabel")}
-                                    </label>
-                                    <input
-                                        type="time"
-                                        value={startTime}
-                                        onChange={(e) => setStartTime(e.target.value)}
-                                        style={inputStyle}
-                                    />
+                                <div style={{ display: "flex", gap: 8 }}>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
+                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                            {t(type === "event" ? "startTimeLabel" : "startTimeLabelOptional")}
+                                        </label>
+                                        <input
+                                            type="time"
+                                            value={startTime}
+                                            onChange={(e) => setStartTime(e.target.value)}
+                                            required={type === "event"}
+                                            style={inputStyle}
+                                        />
+                                    </div>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
+                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                            {t("endTimeLabel")}
+                                        </label>
+                                        <input
+                                            type="time"
+                                            value={endTime}
+                                            onChange={(e) => setEndTime(e.target.value)}
+                                            style={inputStyle}
+                                        />
+                                    </div>
                                 </div>
                             </>
                         )}

@@ -40,6 +40,8 @@ function addConditionalValidation<T extends z.ZodTypeAny>(schema: T) {
             } else {
                 if (!data.date)
                     ctx.addIssue({ code: "custom", path: ["date"], message: "Required" });
+                if (data.type === "event" && !data.startTime)
+                    ctx.addIssue({ code: "custom", path: ["startTime"], message: "Required" });
             }
         }),
     );

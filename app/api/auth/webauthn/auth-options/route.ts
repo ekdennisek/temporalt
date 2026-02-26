@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateAuthenticationOptions } from "@simplewebauthn/server";
+import type { AuthenticatorTransportFuture } from "@simplewebauthn/server";
 import { createChallenge, findPasskeysByUser } from "@/lib/db/passkeys";
 import { findUserByEmail } from "@/lib/db/users";
-import type { AuthenticatorTransportFuture } from "@simplewebauthn/server";
 
 const RP_ID = process.env.WEBAUTHN_RP_ID ?? "localhost";
 const CHALLENGE_TTL_MS = 5 * 60 * 1000;

@@ -1,6 +1,6 @@
 import NextLink, { LinkProps } from "next/link";
-import styles from "./Text.module.css";
 import React from "react";
+import styles from "./Text.module.css";
 
 type Props = {
     variant?: "body" | "helper" | "h1" | "h2";

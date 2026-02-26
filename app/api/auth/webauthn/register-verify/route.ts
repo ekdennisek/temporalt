@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
 import { z } from "zod";
@@ -17,7 +18,6 @@ import {
 } from "@/lib/auth/tokens";
 import { sendMail } from "@/lib/email/mailer";
 import { activationEmail } from "@/lib/email/templates/activation";
-import { randomUUID } from "crypto";
 
 const RP_ID = process.env.WEBAUTHN_RP_ID ?? "localhost";
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";

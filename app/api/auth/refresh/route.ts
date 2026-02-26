@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import {
     clearAuthCookies,
     generateRefreshToken,
@@ -8,8 +10,6 @@ import {
 } from "@/lib/auth/tokens";
 import { rotateRefreshToken } from "@/lib/db/refreshTokens";
 import { findUserById } from "@/lib/db/users";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 
 export async function POST() {
     const jar = await cookies();

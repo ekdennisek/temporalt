@@ -1,6 +1,6 @@
+import { createHash, randomBytes } from "crypto";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { createHash, randomBytes } from "crypto";
 
 function getSecret(): Uint8Array {
     const s = process.env.JWT_SECRET;

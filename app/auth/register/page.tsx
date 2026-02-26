@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { PasskeyRegisterButton } from "@/components/auth/PasskeyRegisterButton";
-import { useTranslations } from "next-intl";
 import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { Divider } from "@/components/Divider";

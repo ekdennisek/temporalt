@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { PasskeyLoginButton } from "@/components/auth/PasskeyLoginButton";
-import { useTranslations } from "next-intl";
 import { Card } from "@/components/Card";
 import { Link, Text } from "@/components/Text";
 import { Divider } from "@/components/Divider";

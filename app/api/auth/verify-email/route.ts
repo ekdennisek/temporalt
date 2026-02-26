@@ -1,3 +1,5 @@
+import { randomUUID } from "crypto";
+import { NextRequest, NextResponse } from "next/server";
 import {
     generateRefreshToken,
     hashActivationToken,
@@ -10,8 +12,6 @@ import { consumeActivationToken } from "@/lib/db/activationTokens";
 import { createRefreshToken } from "@/lib/db/refreshTokens";
 import { activateUser, findUserById } from "@/lib/db/users";
 import { tx } from "@/lib/queries";
-import { randomUUID } from "crypto";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const rawToken = request.nextUrl.searchParams.get("token");

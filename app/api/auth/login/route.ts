@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { findUserByEmail } from "@/lib/db/users";
@@ -10,7 +11,6 @@ import {
     setAuthCookies,
     signAccessToken,
 } from "@/lib/auth/tokens";
-import { randomUUID } from "crypto";
 
 const BodySchema = z.object({
     email: z.string().email(),

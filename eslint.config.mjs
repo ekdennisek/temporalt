@@ -6,6 +6,11 @@ import prettier from "eslint-config-prettier";
 const eslintConfig = defineConfig([
     ...nextVitals,
     ...nextTs,
+    {
+        rules: {
+            "import/order": "error",
+        },
+    },
     prettier,
     // Override default ignores of eslint-config-next.
     globalIgnores([

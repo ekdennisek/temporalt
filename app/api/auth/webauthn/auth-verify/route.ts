@@ -1,6 +1,8 @@
+import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 import { z } from "zod";
+import { isoBase64URL } from "@simplewebauthn/server/helpers";
 import {
     consumeChallenge,
     findPasskeyByCredentialId,
@@ -15,8 +17,6 @@ import {
     setAuthCookies,
     signAccessToken,
 } from "@/lib/auth/tokens";
-import { randomUUID } from "crypto";
-import { isoBase64URL } from "@simplewebauthn/server/helpers";
 
 const RP_ID = process.env.WEBAUTHN_RP_ID ?? "localhost";
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";

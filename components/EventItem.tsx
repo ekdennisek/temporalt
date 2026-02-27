@@ -5,8 +5,14 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { CalendarEvent } from "@/lib/db/calendarEvents";
 import { updateCalendarEvent, deleteCalendarEvent } from "@/lib/actions/calendarEvents";
+import { Input, Select, Textarea } from "@/components/Input";
+import { FormField } from "@/components/FormField";
+import { Button } from "@/components/Button";
+import { SegmentedControl } from "@/components/SegmentedControl";
 
 type EventType = "event" | "tracking" | "birthday";
+
+const EVENT_TYPES = ["event", "tracking", "birthday"] as const;
 
 const TYPE_KEYS: Record<EventType, string> = {
     event: "typeEvent",
@@ -24,7 +30,7 @@ export default function EventItem({ event }: EventItemProps) {
 
     const [mode, setMode] = useState<"view" | "edit">("view");
     const [type, setType] = useState<EventType>(
-        (["event", "tracking", "birthday"] as const).includes(event.type as EventType)
+        (EVENT_TYPES as readonly string[]).includes(event.type)
             ? (event.type as EventType)
             : "event",
     );
@@ -43,9 +49,7 @@ export default function EventItem({ event }: EventItemProps) {
     const [confirmDelete, setConfirmDelete] = useState(false);
 
     function enterEdit() {
-        const eventType: EventType = (["event", "tracking", "birthday"] as const).includes(
-            event.type as EventType,
-        )
+        const eventType: EventType = (EVENT_TYPES as readonly string[]).includes(event.type)
             ? (event.type as EventType)
             : "event";
         setType(eventType);
@@ -108,27 +112,16 @@ export default function EventItem({ event }: EventItemProps) {
         }
     }
 
+    const typeLabels = Object.fromEntries(
+        EVENT_TYPES.map((k) => [k, t(TYPE_KEYS[k])]),
+    ) as Record<EventType, string>;
+
     const liStyle: React.CSSProperties = {
         padding: "0.5rem 0.75rem",
         border: `1px solid ${mode === "edit" ? "var(--color-link)" : "var(--color-border-subtle)"}`,
         borderRadius: "6px",
         textAlign: "left",
         fontSize: "0.95rem",
-    };
-
-    const btnBase: React.CSSProperties = {
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        padding: "0 0.25rem",
-        fontSize: "0.8rem",
-    };
-
-    const inputStyle: React.CSSProperties = {
-        padding: "0.25rem 0.4rem",
-        fontSize: "0.9rem",
-        borderRadius: "4px",
-        border: "1px solid var(--color-border-input)",
     };
 
     if (mode === "edit") {
@@ -138,230 +131,118 @@ export default function EventItem({ event }: EventItemProps) {
                     onSubmit={handleSave}
                     style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}
                 >
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: 0,
-                            borderRadius: 4,
-                            overflow: "hidden",
-                            border: "1px solid var(--color-border-input)",
-                        }}
-                    >
-                        {(["event", "tracking", "birthday"] as const).map((opt) => (
-                            <button
-                                key={opt}
-                                type="button"
-                                onClick={() => setType(opt)}
-                                style={{
-                                    flex: 1,
-                                    padding: "6px 0",
-                                    fontSize: 13,
-                                    border: "none",
-                                    cursor: "pointer",
-                                    backgroundColor: type === opt ? "var(--color-btn-primary-bg)" : "var(--color-bg-surface)",
-                                    color: type === opt ? "var(--color-btn-primary-text)" : "var(--color-text-secondary)",
-                                    fontWeight: type === opt ? "600" : "normal",
-                                }}
-                            >
-                                {t(TYPE_KEYS[opt])}
-                            </button>
-                        ))}
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                            {t("titleLabel")}
-                        </label>
-                        <input
+                    <SegmentedControl
+                        options={EVENT_TYPES}
+                        value={type}
+                        onChange={setType}
+                        labels={typeLabels}
+                    />
+                    <FormField label={t("titleLabel")}>
+                        <Input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
-                            style={inputStyle}
                         />
-                    </div>
+                    </FormField>
                     {type === "birthday" ? (
                         <>
                             <div style={{ display: "flex", gap: "0.5rem" }}>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: "0.2rem",
-                                        flex: 1,
-                                    }}
-                                >
-                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                                        {t("birthMonthLabel")}
-                                    </label>
-                                    <select
+                                <FormField label={t("birthMonthLabel")} style={{ flex: 1 }}>
+                                    <Select
                                         value={birthMonth}
                                         onChange={(e) =>
                                             setBirthMonth(parseInt(e.target.value, 10))
                                         }
-                                        style={inputStyle}
                                     >
                                         {Array.from({ length: 12 }, (_, i) => (
                                             <option key={i + 1} value={i + 1}>
                                                 {t(`month${i + 1}`)}
                                             </option>
                                         ))}
-                                    </select>
-                                </div>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: "0.2rem",
-                                        flex: 1,
-                                    }}
-                                >
-                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                                        {t("birthDayLabel")}
-                                    </label>
-                                    <select
+                                    </Select>
+                                </FormField>
+                                <FormField label={t("birthDayLabel")} style={{ flex: 1 }}>
+                                    <Select
                                         value={birthDay}
                                         onChange={(e) => setBirthDay(parseInt(e.target.value, 10))}
-                                        style={inputStyle}
                                     >
                                         {Array.from({ length: 31 }, (_, i) => (
                                             <option key={i + 1} value={i + 1}>
                                                 {i + 1}
                                             </option>
                                         ))}
-                                    </select>
-                                </div>
+                                    </Select>
+                                </FormField>
                             </div>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "0.2rem",
-                                }}
-                            >
-                                <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                                    {t("birthYearLabel")}
-                                </label>
-                                <input
+                            <FormField label={t("birthYearLabel")}>
+                                <Input
                                     type="number"
                                     value={birthYear}
                                     onChange={(e) => setBirthYear(e.target.value)}
                                     min={1}
                                     max={9999}
-                                    style={inputStyle}
                                 />
-                            </div>
+                            </FormField>
                         </>
                     ) : (
                         <>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "0.2rem",
-                                }}
-                            >
-                                <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                                    {t("dateLabel")}
-                                </label>
-                                <input
+                            <FormField label={t("dateLabel")}>
+                                <Input
                                     type="date"
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
                                     required
-                                    style={inputStyle}
                                 />
-                            </div>
+                            </FormField>
                             <div style={{ display: "flex", gap: "0.5rem" }}>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: "0.2rem",
-                                        flex: 1,
-                                    }}
+                                <FormField
+                                    label={t(
+                                        type === "event"
+                                            ? "startTimeLabel"
+                                            : "startTimeLabelOptional",
+                                    )}
+                                    style={{ flex: 1 }}
                                 >
-                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                                        {t(
-                                            type === "event"
-                                                ? "startTimeLabel"
-                                                : "startTimeLabelOptional",
-                                        )}
-                                    </label>
-                                    <input
+                                    <Input
                                         type="time"
                                         value={startTime}
                                         onChange={(e) => setStartTime(e.target.value)}
                                         required={type === "event"}
-                                        style={inputStyle}
                                     />
-                                </div>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: "0.2rem",
-                                        flex: 1,
-                                    }}
-                                >
-                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                                        {t("endTimeLabel")}
-                                    </label>
-                                    <input
+                                </FormField>
+                                <FormField label={t("endTimeLabel")} style={{ flex: 1 }}>
+                                    <Input
                                         type="time"
                                         value={endTime}
                                         onChange={(e) => setEndTime(e.target.value)}
-                                        style={inputStyle}
                                     />
-                                </div>
+                                </FormField>
                             </div>
                         </>
                     )}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
-                            {t("notesLabel")}
-                        </label>
-                        <textarea
+                    <FormField label={t("notesLabel")}>
+                        <Textarea
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             rows={3}
-                            style={{
-                                ...inputStyle,
-                                resize: "vertical",
-                            }}
                         />
-                    </div>
+                    </FormField>
                     {error && (
                         <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--color-error-text)" }}>{error}</p>
                     )}
                     <div style={{ display: "flex", gap: "0.5rem" }}>
-                        <button
-                            type="submit"
-                            disabled={pending}
-                            style={{
-                                ...btnBase,
-                                padding: "0.3rem 0.75rem",
-                                background: "var(--color-btn-primary-bg)",
-                                color: "var(--color-btn-primary-text)",
-                                borderRadius: "4px",
-                                fontSize: "0.85rem",
-                            }}
-                        >
+                        <Button type="submit" disabled={pending}>
                             {pending ? t("saving") : t("save")}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant="secondary"
                             type="button"
                             onClick={() => setMode("view")}
                             disabled={pending}
-                            style={{
-                                ...btnBase,
-                                padding: "0.3rem 0.75rem",
-                                border: "1px solid var(--color-border-input)",
-                                borderRadius: "4px",
-                                fontSize: "0.85rem",
-                            }}
                         >
                             {t("cancel")}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </li>
@@ -377,32 +258,31 @@ export default function EventItem({ event }: EventItemProps) {
                     </span>
                 )}
                 <span style={{ flexGrow: 1 }}>{event.title}</span>
-                <button onClick={enterEdit} style={{ ...btnBase, color: "var(--color-link)" }}>
+                <Button variant="ghost" onClick={enterEdit}>
                     {t("edit")}
-                </button>
+                </Button>
                 {!confirmDelete ? (
-                    <button
-                        onClick={() => setConfirmDelete(true)}
-                        style={{ ...btnBase, color: "var(--color-error-text)" }}
-                    >
+                    <Button variant="danger" onClick={() => setConfirmDelete(true)}>
                         {t("delete")}
-                    </button>
+                    </Button>
                 ) : (
                     <>
-                        <button
+                        <Button
+                            variant="danger"
                             onClick={handleDelete}
                             disabled={pending}
-                            style={{ ...btnBase, color: "var(--color-error-text)", fontWeight: "bold" }}
+                            style={{ fontWeight: "bold" }}
                         >
                             {pending ? t("deleting") : t("confirmDelete")}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant="ghost"
                             onClick={() => setConfirmDelete(false)}
                             disabled={pending}
-                            style={{ ...btnBase, color: "var(--color-text-tertiary)" }}
+                            style={{ color: "var(--color-text-tertiary)" }}
                         >
                             {t("cancel")}
-                        </button>
+                        </Button>
                     </>
                 )}
             </div>

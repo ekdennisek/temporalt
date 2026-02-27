@@ -4,8 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { createCalendarEvent } from "@/lib/actions/calendarEvents";
+import { Input, Select, Textarea } from "@/components/Input";
+import { FormField } from "@/components/FormField";
+import { Button } from "@/components/Button";
+import { SegmentedControl } from "@/components/SegmentedControl";
 
 type EventType = "event" | "tracking" | "birthday";
+
+const EVENT_TYPES = ["event", "tracking", "birthday"] as const;
 
 const TYPE_KEYS: Record<EventType, string> = {
     event: "typeEvent",
@@ -95,12 +101,9 @@ export default function CreateEventFAB() {
         }
     }
 
-    const inputStyle: React.CSSProperties = {
-        padding: "6px 8px",
-        border: "1px solid var(--color-border-input)",
-        borderRadius: 4,
-        fontSize: 14,
-    };
+    const typeLabels = Object.fromEntries(
+        EVENT_TYPES.map((k) => [k, t(TYPE_KEYS[k])]),
+    ) as Record<EventType, string>;
 
     return (
         <div ref={ref} style={{ position: "fixed", top: 16, right: 68, zIndex: 1000 }}>
@@ -146,167 +149,110 @@ export default function CreateEventFAB() {
                         onSubmit={handleSubmit}
                         style={{ display: "flex", flexDirection: "column", gap: 10 }}
                     >
-                        <div
-                            style={{
-                                display: "flex",
-                                gap: 0,
-                                borderRadius: 4,
-                                overflow: "hidden",
-                                border: "1px solid var(--color-border-input)",
-                            }}
-                        >
-                            {(["event", "tracking", "birthday"] as const).map((opt) => (
-                                <button
-                                    key={opt}
-                                    type="button"
-                                    onClick={() => setType(opt)}
-                                    style={{
-                                        flex: 1,
-                                        padding: "6px 0",
-                                        fontSize: 13,
-                                        border: "none",
-                                        cursor: "pointer",
-                                        backgroundColor: type === opt ? "var(--color-btn-primary-bg)" : "var(--color-bg-surface)",
-                                        color: type === opt ? "var(--color-btn-primary-text)" : "var(--color-text-secondary)",
-                                        fontWeight: type === opt ? "600" : "normal",
-                                    }}
-                                >
-                                    {t(TYPE_KEYS[opt])}
-                                </button>
-                            ))}
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>{t("titleLabel")}</label>
-                            <input
+                        <SegmentedControl
+                            options={EVENT_TYPES}
+                            value={type}
+                            onChange={setType}
+                            labels={typeLabels}
+                        />
+                        <FormField label={t("titleLabel")}>
+                            <Input
                                 type="text"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 required
                                 autoFocus
-                                style={inputStyle}
                             />
-                        </div>
+                        </FormField>
                         {type === "birthday" ? (
                             <>
                                 <div style={{ display: "flex", gap: 8 }}>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
-                                            {t("birthMonthLabel")}
-                                        </label>
-                                        <select
+                                    <FormField label={t("birthMonthLabel")} style={{ flex: 1 }}>
+                                        <Select
                                             value={birthMonth}
                                             onChange={(e) => setBirthMonth(parseInt(e.target.value, 10))}
-                                            style={inputStyle}
                                         >
                                             {Array.from({ length: 12 }, (_, i) => (
                                                 <option key={i + 1} value={i + 1}>
                                                     {t(`month${i + 1}`)}
                                                 </option>
                                             ))}
-                                        </select>
-                                    </div>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
-                                            {t("birthDayLabel")}
-                                        </label>
-                                        <select
+                                        </Select>
+                                    </FormField>
+                                    <FormField label={t("birthDayLabel")} style={{ flex: 1 }}>
+                                        <Select
                                             value={birthDay}
                                             onChange={(e) => setBirthDay(parseInt(e.target.value, 10))}
-                                            style={inputStyle}
                                         >
                                             {Array.from({ length: 31 }, (_, i) => (
                                                 <option key={i + 1} value={i + 1}>
                                                     {i + 1}
                                                 </option>
                                             ))}
-                                        </select>
-                                    </div>
+                                        </Select>
+                                    </FormField>
                                 </div>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                                    <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
-                                        {t("birthYearLabel")}
-                                    </label>
-                                    <input
+                                <FormField label={t("birthYearLabel")}>
+                                    <Input
                                         type="number"
                                         value={birthYear}
                                         onChange={(e) => setBirthYear(e.target.value)}
                                         min={1}
                                         max={9999}
-                                        placeholder=""
-                                        style={inputStyle}
                                     />
-                                </div>
+                                </FormField>
                             </>
                         ) : (
                             <>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                                    <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
-                                        {t("dateLabel")}
-                                    </label>
-                                    <input
+                                <FormField label={t("dateLabel")}>
+                                    <Input
                                         type="date"
                                         value={date}
                                         onChange={(e) => setDate(e.target.value)}
                                         required
-                                        style={inputStyle}
                                     />
-                                </div>
+                                </FormField>
                                 <div style={{ display: "flex", gap: 8 }}>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
-                                            {t(type === "event" ? "startTimeLabel" : "startTimeLabelOptional")}
-                                        </label>
-                                        <input
+                                    <FormField
+                                        label={t(type === "event" ? "startTimeLabel" : "startTimeLabelOptional")}
+                                        style={{ flex: 1 }}
+                                    >
+                                        <Input
                                             type="time"
                                             value={startTime}
                                             onChange={(e) => setStartTime(e.target.value)}
                                             required={type === "event"}
-                                            style={inputStyle}
                                         />
-                                    </div>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
-                                            {t("endTimeLabel")}
-                                        </label>
-                                        <input
+                                    </FormField>
+                                    <FormField label={t("endTimeLabel")} style={{ flex: 1 }}>
+                                        <Input
                                             type="time"
                                             value={endTime}
                                             onChange={(e) => setEndTime(e.target.value)}
-                                            style={inputStyle}
                                         />
-                                    </div>
+                                    </FormField>
                                 </div>
                             </>
                         )}
-                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>{t("notesLabel")}</label>
-                            <textarea
+                        <FormField label={t("notesLabel")}>
+                            <Textarea
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
                                 rows={2}
-                                style={{
-                                    ...inputStyle,
-                                    resize: "vertical",
-                                }}
                             />
-                        </div>
+                        </FormField>
                         {error && <p style={{ fontSize: 13, color: "var(--color-error-text)", margin: 0 }}>{error}</p>}
-                        <button
+                        <Button
                             type="submit"
                             disabled={pending}
                             style={{
                                 padding: "8px",
-                                backgroundColor: "var(--color-btn-primary-bg)",
-                                color: "var(--color-btn-primary-text)",
-                                border: "none",
-                                borderRadius: 4,
-                                cursor: pending ? "not-allowed" : "pointer",
                                 fontSize: 14,
                                 opacity: pending ? 0.7 : 1,
                             }}
                         >
                             {pending ? t("saving") : t("save")}
-                        </button>
+                        </Button>
                     </form>
                 </div>
             )}

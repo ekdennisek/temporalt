@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/Button";
 
 type Props = {
     onEmailChange?: (email: string) => void;
@@ -125,24 +126,20 @@ export function RegisterForm({ onEmailChange }: Props) {
                     }}
                 />
             </div>
-            <button
+            <Button
                 type="submit"
                 disabled={loading}
                 style={{
                     width: "100%",
                     padding: "10px 0",
-                    background: "var(--color-btn-primary-bg)",
-                    color: "var(--color-btn-primary-text)",
-                    border: "none",
                     borderRadius: 6,
                     fontSize: 15,
-                    cursor: "pointer",
                     marginTop: 4,
                     opacity: loading ? 0.7 : 1,
                 }}
             >
                 {loading ? t("creatingAccount") : t("createAccount")}
-            </button>
+            </Button>
         </form>
     );
 }

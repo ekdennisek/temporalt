@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
 import { getSessionUser } from "@/lib/auth/session";
 import { getEventsForDate, getBirthdaysForDate } from "@/lib/db/calendarEvents";
 import type { CalendarEvent } from "@/lib/db/calendarEvents";
 import EventItem from "@/components/EventItem";
+import { Link, Text } from "@/components/Text";
 
 type PageProps = {
     params: Promise<{
@@ -116,57 +116,58 @@ export default async function DayPage({ params }: PageProps) {
     const events = [...regularEvents, ...birthdaysToEvents(birthdays, year, month, day)];
 
     return (
-        <main
+        <div
             style={{
                 height: "100vh",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "2rem",
                 boxSizing: "border-box",
+                textAlign: "center",
             }}
         >
-            <div style={{ maxWidth: "600px", width: "100%", textAlign: "center" }}>
-                <h1 style={{ textTransform: "capitalize" }}>{formattedDate}</h1>
+            <Text
+                variant="h2"
+                style={{ textTransform: "capitalize", marginBottom: 0, fontSize: "1rem" }}
+            >
+                {formattedDate}
+            </Text>
 
-                {holidayInfo.isHoliday && holidayInfo.name && (
-                    <p style={{ color: "#c00", fontSize: "1.25rem", fontWeight: "bold" }}>
+            {holidayInfo.isHoliday && holidayInfo.name && (
+                <>
+                    <Text variant="h1" style={{ color: "var(--color-red-700)" }}>
                         {holidayInfo.name}
-                    </p>
-                )}
+                    </Text>
+                </>
+            )}
 
-                <p style={{ fontSize: "1.1rem", color: "#666" }}>{relativeText}</p>
+            <Text variant="helper" style={{ fontSize: "1.1rem" }}>
+                {relativeText}
+            </Text>
 
-                {events.length > 0 && (
-                    <ul
-                        style={{
-                            listStyle: "none",
-                            padding: 0,
-                            margin: "1.5rem 0 0",
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "0.5rem",
-                        }}
-                    >
-                        {events.map((event) => (
-                            <EventItem key={event.eventId} event={event} />
-                        ))}
-                    </ul>
-                )}
-
-                <Link
-                    href={`/${year}/${month}`}
+            {events.length > 0 && (
+                <ul
                     style={{
-                        display: "inline-block",
-                        marginTop: "2rem",
-                        padding: "0.5rem 1rem",
-                        color: "#0070f3",
-                        textDecoration: "none",
+                        listStyle: "none",
+                        padding: 0,
+                        margin: "1rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.5rem",
+                        minWidth: 600,
                     }}
                 >
-                    {t("backToCalendar")}
-                </Link>
-            </div>
-        </main>
+                    {events.map((event) => (
+                        <EventItem key={event.eventId} event={event} />
+                    ))}
+                </ul>
+            )}
+
+            <Link href={`/${year}/${month}`} style={{ fontSize: 16 }}>
+                {t("backToCalendar")}
+            </Link>
+        </div>
     );
 }

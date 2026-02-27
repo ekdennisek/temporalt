@@ -38,7 +38,10 @@ export function Text({ variant, children, style }: Props) {
     }
 }
 
-export function Link({ children, ...props }: LinkProps & { children: React.ReactNode }) {
+export function Link({
+    children,
+    ...props
+}: LinkProps & { children: React.ReactNode; style?: React.CSSProperties }) {
     return (
         <NextLink className={styles.link} {...props}>
             {children}

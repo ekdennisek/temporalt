@@ -11,11 +11,11 @@ function getSecret(): Uint8Array {
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60; // 15 minutes
 const REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days
 
-export interface AccessTokenPayload {
+export type AccessTokenPayload = {
     sub: string; // userId as string
     email: string;
     status: "active";
-}
+};
 
 // --- JWT ---
 

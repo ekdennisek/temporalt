@@ -5,9 +5,9 @@ import { startAuthentication } from "@simplewebauthn/browser";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-interface Props {
+type Props = {
     email: string;
-}
+};
 
 export function PasskeyLoginButton({ email }: Props) {
     const router = useRouter();

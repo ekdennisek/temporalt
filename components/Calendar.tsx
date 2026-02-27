@@ -3,27 +3,27 @@ import Link from "next/link";
 import { calculateWeekNumber } from "@/lib/weekNumber";
 import { isSwedishHoliday } from "@/lib/swedishHolidays";
 
-interface CalendarDay {
+type CalendarDay = {
     date: Date;
     dayOfMonth: number;
     isCurrentMonth: boolean;
     isHoliday: boolean;
     holidayName?: string;
     isToday: boolean;
-}
+};
 
-interface CalendarWeek {
+type CalendarWeek = {
     weekNumber: number;
     days: CalendarDay[];
-}
+};
 
-export interface CalendarEvent {
+export type CalendarEvent = {
     eventId: number;
     title: string;
     type: string;
     date: string; // "YYYY-MM-DD"
     startTime?: string | null;
-}
+};
 
 const EVENT_CHIP_COLORS: Record<string, { background: string; color: string }> = {
     event: { background: "#0070f3", color: "#fff" },
@@ -36,12 +36,12 @@ function getChipStyle(type: string) {
     return EVENT_CHIP_COLORS[type] ?? EVENT_CHIP_COLORS.event;
 }
 
-interface CalendarProps {
+type CalendarProps = {
     year: number;
     month: number;
     locale: string;
     events?: CalendarEvent[];
-}
+};
 
 function getWeekStartDay(locale: string): number {
     try {

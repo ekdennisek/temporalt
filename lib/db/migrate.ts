@@ -7,11 +7,11 @@ import { many, none, tx } from "../queries";
 const MIGRATIONS_DIR = join(process.cwd(), "db", "migrations");
 const MIGRATION_FILENAME_RE = /^(\d+)-[a-z0-9-]+\.sql$/;
 
-interface MigrationFile {
+type MigrationFile = {
     id: number;
     filename: string;
     fullPath: string;
-}
+};
 
 async function discoverMigrations(): Promise<MigrationFile[]> {
     const entries = await readdir(MIGRATIONS_DIR);

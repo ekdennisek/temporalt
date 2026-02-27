@@ -4,9 +4,9 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-interface Props {
+type Props = {
     onEmailChange?: (email: string) => void;
-}
+};
 
 export function LoginForm({ onEmailChange }: Props) {
     const router = useRouter();

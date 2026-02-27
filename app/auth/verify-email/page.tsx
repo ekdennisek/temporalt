@@ -2,9 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/Card";
 import { Link, Text } from "@/components/Text";
 
-interface Props {
+type Props = {
     searchParams: Promise<{ error?: string }>;
-}
+};
 
 export default async function VerifyEmailPage({ searchParams }: Props) {
     const { error } = await searchParams;

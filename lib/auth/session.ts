@@ -1,10 +1,10 @@
 import { cookies, headers } from "next/headers";
 import { verifyAccessToken } from "./tokens";
 
-export interface SessionUser {
+export type SessionUser = {
     userId: number;
     email: string;
-}
+};
 
 /**
  * Returns the authenticated user from the request headers set by middleware,

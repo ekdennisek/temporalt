@@ -14,9 +14,9 @@ const TYPE_KEYS: Record<EventType, string> = {
     birthday: "typeBirthday",
 };
 
-interface EventItemProps {
+type EventItemProps = {
     event: CalendarEvent;
-}
+};
 
 export default function EventItem({ event }: EventItemProps) {
     const t = useTranslations("eventItem");
@@ -35,7 +35,9 @@ export default function EventItem({ event }: EventItemProps) {
     const [notes, setNotes] = useState(event.notes ?? "");
     const [birthMonth, setBirthMonth] = useState(event.birthMonth ?? 1);
     const [birthDay, setBirthDay] = useState(event.birthDay ?? 1);
-    const [birthYear, setBirthYear] = useState(event.birthYear != null ? String(event.birthYear) : "");
+    const [birthYear, setBirthYear] = useState(
+        event.birthYear != null ? String(event.birthYear) : "",
+    );
     const [pending, setPending] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -218,9 +220,7 @@ export default function EventItem({ event }: EventItemProps) {
                                     </label>
                                     <select
                                         value={birthDay}
-                                        onChange={(e) =>
-                                            setBirthDay(parseInt(e.target.value, 10))
-                                        }
+                                        onChange={(e) => setBirthDay(parseInt(e.target.value, 10))}
                                         style={inputStyle}
                                     >
                                         {Array.from({ length: 31 }, (_, i) => (
@@ -281,7 +281,11 @@ export default function EventItem({ event }: EventItemProps) {
                                     }}
                                 >
                                     <label style={{ fontSize: "0.8rem", color: "#666" }}>
-                                        {t(type === "event" ? "startTimeLabel" : "startTimeLabelOptional")}
+                                        {t(
+                                            type === "event"
+                                                ? "startTimeLabel"
+                                                : "startTimeLabelOptional",
+                                        )}
                                     </label>
                                     <input
                                         type="time"

@@ -1,9 +1,9 @@
 import { calculateEaster } from "./easterCalculation";
 
-export interface MovableHoliday {
+export type MovableHoliday = {
     date: Date;
     name: string;
-}
+};
 
 /**
  * Calculate Good Friday (Långfredagen)

@@ -3,9 +3,9 @@
 import { useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 
-interface Props {
+type Props = {
     onEmailChange?: (email: string) => void;
-}
+};
 
 export function RegisterForm({ onEmailChange }: Props) {
     const [error, setError] = useState<string | null>(null);

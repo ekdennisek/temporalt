@@ -8,13 +8,13 @@ import { getEventsForDate, getBirthdaysForDate } from "@/lib/db/calendarEvents";
 import type { CalendarEvent } from "@/lib/db/calendarEvents";
 import EventItem from "@/components/EventItem";
 
-interface PageProps {
+type PageProps = {
     params: Promise<{
         year: string;
         month: string;
         day: string;
     }>;
-}
+};
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { year: yearStr, month: monthStr, day: dayStr } = await params;
@@ -53,7 +53,12 @@ function getRelativeDayText(date: Date, t: Awaited<ReturnType<typeof getTranslat
     }
 }
 
-function birthdaysToEvents(birthdays: CalendarEvent[], year: number, month: number, day: number): CalendarEvent[] {
+function birthdaysToEvents(
+    birthdays: CalendarEvent[],
+    year: number,
+    month: number,
+    day: number,
+): CalendarEvent[] {
     const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     return birthdays.map((b) => {
         const age = b.birthYear != null ? year - b.birthYear : null;

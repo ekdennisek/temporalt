@@ -7,12 +7,12 @@ import { getSessionUser } from "@/lib/auth/session";
 import { getEventsForMonth, getBirthdaysForMonth } from "@/lib/db/calendarEvents";
 import type { CalendarEvent } from "@/lib/db/calendarEvents";
 
-interface PageProps {
+type PageProps = {
     params: Promise<{
         year: string;
         month: string;
     }>;
-}
+};
 
 function isLeapYear(year: number): boolean {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;

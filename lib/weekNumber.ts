@@ -1,7 +1,7 @@
-interface WeekInfo {
+type WeekInfo = {
     firstDay: number;
     minimalDays: number;
-}
+};
 
 function getWeekInfoSafe(locale: string): WeekInfo {
     if (typeof window === "undefined") {

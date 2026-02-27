@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-interface Props {
+type Props = {
     user: { email: string } | null;
-}
+};
 
 export default function UserFAB({ user }: Props) {
     const [open, setOpen] = useState(false);

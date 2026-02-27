@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 
 const SNAP_THRESHOLD = 80; // px
 
-interface Props {
+type Props = {
     prevHref: string;
     nextHref: string;
     prevContent: React.ReactNode;
     nextContent: React.ReactNode;
     children: React.ReactNode;
-}
+};
 
 export default function CalendarSwipeHandler({
     prevHref,

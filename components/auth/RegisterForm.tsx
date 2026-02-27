@@ -3,6 +3,8 @@
 import { useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { FormField } from "@/components/FormField";
 
 type Props = {
     onEmailChange?: (email: string) => void;
@@ -62,7 +64,7 @@ export function RegisterForm({ onEmailChange }: Props) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {error && (
                 <p
                     role="alert"
@@ -72,72 +74,32 @@ export function RegisterForm({ onEmailChange }: Props) {
                         padding: "8px 12px",
                         borderRadius: 4,
                         fontSize: 14,
-                        marginBottom: 12,
                     }}
                 >
                     {error}
                 </p>
             )}
-            <div style={{ marginBottom: 16 }}>
-                <label
-                    htmlFor="email"
-                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "var(--color-text-primary)" }}
-                >
-                    {t("email")}
-                </label>
-                <input
+            <FormField label={t("email")} htmlFor="email">
+                <Input
                     id="email"
                     name="email"
                     type="email"
                     required
                     autoComplete="email"
                     onChange={(e) => onEmailChange?.(e.target.value)}
-                    style={{
-                        display: "block",
-                        width: "100%",
-                        padding: "8px 12px",
-                        border: "1px solid var(--color-border-default)",
-                        borderRadius: 6,
-                        fontSize: 14,
-                    }}
                 />
-            </div>
-            <div style={{ marginBottom: 16 }}>
-                <label
-                    htmlFor="password"
-                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "var(--color-text-primary)" }}
-                >
-                    {t("password")}
-                </label>
-                <input
+            </FormField>
+            <FormField label={t("password")} htmlFor="password">
+                <Input
                     id="password"
                     name="password"
                     type="password"
                     required
                     minLength={12}
                     autoComplete="new-password"
-                    style={{
-                        display: "block",
-                        width: "100%",
-                        padding: "8px 12px",
-                        border: "1px solid var(--color-border-default)",
-                        borderRadius: 6,
-                        fontSize: 14,
-                    }}
                 />
-            </div>
-            <Button
-                type="submit"
-                disabled={loading}
-                style={{
-                    width: "100%",
-                    padding: "10px 0",
-                    borderRadius: 6,
-                    fontSize: 15,
-                    marginTop: 4,
-                    opacity: loading ? 0.7 : 1,
-                }}
-            >
+            </FormField>
+            <Button type="submit" disabled={loading} fullWidth>
                 {loading ? t("creatingAccount") : t("createAccount")}
             </Button>
         </form>

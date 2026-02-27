@@ -36,3 +36,11 @@
     font-size: 13px;
     color: var(--color-error-text);
 }
+
+.fullWidth {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 15px;
+    border-radius: 6px;
+    margin-top: 4px;
+}

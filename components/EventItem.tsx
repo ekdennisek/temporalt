@@ -110,7 +110,7 @@ export default function EventItem({ event }: EventItemProps) {
 
     const liStyle: React.CSSProperties = {
         padding: "0.5rem 0.75rem",
-        border: `1px solid ${mode === "edit" ? "#0070f3" : "#e5e7eb"}`,
+        border: `1px solid ${mode === "edit" ? "var(--color-link)" : "var(--color-border-subtle)"}`,
         borderRadius: "6px",
         textAlign: "left",
         fontSize: "0.95rem",
@@ -128,7 +128,7 @@ export default function EventItem({ event }: EventItemProps) {
         padding: "0.25rem 0.4rem",
         fontSize: "0.9rem",
         borderRadius: "4px",
-        border: "1px solid #ccc",
+        border: "1px solid var(--color-border-input)",
     };
 
     if (mode === "edit") {
@@ -144,7 +144,7 @@ export default function EventItem({ event }: EventItemProps) {
                             gap: 0,
                             borderRadius: 4,
                             overflow: "hidden",
-                            border: "1px solid #ccc",
+                            border: "1px solid var(--color-border-input)",
                         }}
                     >
                         {(["event", "tracking", "birthday"] as const).map((opt) => (
@@ -158,8 +158,8 @@ export default function EventItem({ event }: EventItemProps) {
                                     fontSize: 13,
                                     border: "none",
                                     cursor: "pointer",
-                                    backgroundColor: type === opt ? "#0070f3" : "white",
-                                    color: type === opt ? "white" : "#555",
+                                    backgroundColor: type === opt ? "var(--color-btn-primary-bg)" : "var(--color-bg-surface)",
+                                    color: type === opt ? "var(--color-btn-primary-text)" : "var(--color-text-secondary)",
                                     fontWeight: type === opt ? "600" : "normal",
                                 }}
                             >
@@ -168,7 +168,7 @@ export default function EventItem({ event }: EventItemProps) {
                         ))}
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                        <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                             {t("titleLabel")}
                         </label>
                         <input
@@ -190,7 +190,7 @@ export default function EventItem({ event }: EventItemProps) {
                                         flex: 1,
                                     }}
                                 >
-                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                                         {t("birthMonthLabel")}
                                     </label>
                                     <select
@@ -215,7 +215,7 @@ export default function EventItem({ event }: EventItemProps) {
                                         flex: 1,
                                     }}
                                 >
-                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                                         {t("birthDayLabel")}
                                     </label>
                                     <select
@@ -238,7 +238,7 @@ export default function EventItem({ event }: EventItemProps) {
                                     gap: "0.2rem",
                                 }}
                             >
-                                <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                                     {t("birthYearLabel")}
                                 </label>
                                 <input
@@ -260,7 +260,7 @@ export default function EventItem({ event }: EventItemProps) {
                                     gap: "0.2rem",
                                 }}
                             >
-                                <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                                     {t("dateLabel")}
                                 </label>
                                 <input
@@ -280,7 +280,7 @@ export default function EventItem({ event }: EventItemProps) {
                                         flex: 1,
                                     }}
                                 >
-                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                                         {t(
                                             type === "event"
                                                 ? "startTimeLabel"
@@ -303,7 +303,7 @@ export default function EventItem({ event }: EventItemProps) {
                                         flex: 1,
                                     }}
                                 >
-                                    <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                                    <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                                         {t("endTimeLabel")}
                                     </label>
                                     <input
@@ -317,7 +317,7 @@ export default function EventItem({ event }: EventItemProps) {
                         </>
                     )}
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <label style={{ fontSize: "0.8rem", color: "#666" }}>
+                        <label style={{ fontSize: "0.8rem", color: "var(--color-text-tertiary)" }}>
                             {t("notesLabel")}
                         </label>
                         <textarea
@@ -331,7 +331,7 @@ export default function EventItem({ event }: EventItemProps) {
                         />
                     </div>
                     {error && (
-                        <p style={{ margin: 0, fontSize: "0.8rem", color: "#c00" }}>{error}</p>
+                        <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--color-error-text)" }}>{error}</p>
                     )}
                     <div style={{ display: "flex", gap: "0.5rem" }}>
                         <button
@@ -340,8 +340,8 @@ export default function EventItem({ event }: EventItemProps) {
                             style={{
                                 ...btnBase,
                                 padding: "0.3rem 0.75rem",
-                                background: "#0070f3",
-                                color: "#fff",
+                                background: "var(--color-btn-primary-bg)",
+                                color: "var(--color-btn-primary-text)",
                                 borderRadius: "4px",
                                 fontSize: "0.85rem",
                             }}
@@ -355,7 +355,7 @@ export default function EventItem({ event }: EventItemProps) {
                             style={{
                                 ...btnBase,
                                 padding: "0.3rem 0.75rem",
-                                border: "1px solid #ccc",
+                                border: "1px solid var(--color-border-input)",
                                 borderRadius: "4px",
                                 fontSize: "0.85rem",
                             }}
@@ -372,18 +372,18 @@ export default function EventItem({ event }: EventItemProps) {
         <li style={liStyle}>
             <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
                 {event.startTime && (
-                    <span style={{ color: "#666", fontSize: "0.85rem", flexShrink: 0 }}>
+                    <span style={{ color: "var(--color-text-tertiary)", fontSize: "0.85rem", flexShrink: 0 }}>
                         {event.startTime.slice(0, 5)}
                     </span>
                 )}
                 <span style={{ flexGrow: 1 }}>{event.title}</span>
-                <button onClick={enterEdit} style={{ ...btnBase, color: "#0070f3" }}>
+                <button onClick={enterEdit} style={{ ...btnBase, color: "var(--color-link)" }}>
                     {t("edit")}
                 </button>
                 {!confirmDelete ? (
                     <button
                         onClick={() => setConfirmDelete(true)}
-                        style={{ ...btnBase, color: "#c00" }}
+                        style={{ ...btnBase, color: "var(--color-error-text)" }}
                     >
                         {t("delete")}
                     </button>
@@ -392,14 +392,14 @@ export default function EventItem({ event }: EventItemProps) {
                         <button
                             onClick={handleDelete}
                             disabled={pending}
-                            style={{ ...btnBase, color: "#c00", fontWeight: "bold" }}
+                            style={{ ...btnBase, color: "var(--color-error-text)", fontWeight: "bold" }}
                         >
                             {pending ? t("deleting") : t("confirmDelete")}
                         </button>
                         <button
                             onClick={() => setConfirmDelete(false)}
                             disabled={pending}
-                            style={{ ...btnBase, color: "#666" }}
+                            style={{ ...btnBase, color: "var(--color-text-tertiary)" }}
                         >
                             {t("cancel")}
                         </button>
@@ -407,12 +407,12 @@ export default function EventItem({ event }: EventItemProps) {
                 )}
             </div>
             {event.notes && (
-                <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "#888" }}>
+                <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "var(--color-text-muted)" }}>
                     {event.notes}
                 </p>
             )}
             {error && (
-                <p style={{ margin: "0.25rem 0 0", fontSize: "0.8rem", color: "#c00" }}>{error}</p>
+                <p style={{ margin: "0.25rem 0 0", fontSize: "0.8rem", color: "var(--color-error-text)" }}>{error}</p>
             )}
         </li>
     );

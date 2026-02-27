@@ -42,12 +42,12 @@ export default function UserFAB({ user }: Props) {
                     height: 44,
                     borderRadius: "50%",
                     border: "none",
-                    backgroundColor: "#0070f3",
+                    backgroundColor: "var(--color-fab-user-bg)",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                    boxShadow: "var(--shadow-fab)",
                     padding: 0,
                 }}
             >
@@ -62,10 +62,10 @@ export default function UserFAB({ user }: Props) {
                         position: "absolute",
                         top: 52,
                         right: 0,
-                        backgroundColor: "white",
-                        border: "1px solid #ddd",
+                        backgroundColor: "var(--color-bg-surface)",
+                        border: "1px solid var(--color-border-default)",
                         borderRadius: 8,
-                        boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                        boxShadow: "var(--shadow-dropdown)",
                         minWidth: 160,
                         overflow: "hidden",
                     }}
@@ -82,7 +82,7 @@ export default function UserFAB({ user }: Props) {
                                 border: "none",
                                 cursor: "pointer",
                                 fontSize: 14,
-                                color: "#333",
+                                color: "var(--color-text-primary)",
                             }}
                         >
                             {t("logOut")}
@@ -96,7 +96,7 @@ export default function UserFAB({ user }: Props) {
                                     padding: "10px 16px",
                                     fontSize: 14,
                                     textDecoration: "none",
-                                    color: "#333",
+                                    color: "var(--color-text-primary)",
                                 }}
                             >
                                 {t("logIn")}
@@ -108,8 +108,8 @@ export default function UserFAB({ user }: Props) {
                                     padding: "10px 16px",
                                     fontSize: 14,
                                     textDecoration: "none",
-                                    color: "#333",
-                                    borderTop: "1px solid #eee",
+                                    color: "var(--color-text-primary)",
+                                    borderTop: "1px solid var(--color-border-light)",
                                 }}
                             >
                                 {t("register")}

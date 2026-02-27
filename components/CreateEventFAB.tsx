@@ -97,7 +97,7 @@ export default function CreateEventFAB() {
 
     const inputStyle: React.CSSProperties = {
         padding: "6px 8px",
-        border: "1px solid #ccc",
+        border: "1px solid var(--color-border-input)",
         borderRadius: 4,
         fontSize: 14,
     };
@@ -112,15 +112,15 @@ export default function CreateEventFAB() {
                     height: 44,
                     borderRadius: "50%",
                     border: "none",
-                    backgroundColor: "#22c55e",
+                    backgroundColor: "var(--color-fab-create-bg)",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                    boxShadow: "var(--shadow-fab)",
                     padding: 0,
                     fontSize: 24,
-                    color: "white",
+                    color: "var(--color-text-on-primary)",
                     fontWeight: "bold",
                     lineHeight: 1,
                 }}
@@ -133,10 +133,10 @@ export default function CreateEventFAB() {
                         position: "absolute",
                         top: 52,
                         right: 0,
-                        backgroundColor: "white",
-                        border: "1px solid #ddd",
+                        backgroundColor: "var(--color-bg-surface)",
+                        border: "1px solid var(--color-border-default)",
                         borderRadius: 8,
-                        boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                        boxShadow: "var(--shadow-dropdown)",
                         width: 280,
                         overflow: "hidden",
                         padding: "16px",
@@ -152,7 +152,7 @@ export default function CreateEventFAB() {
                                 gap: 0,
                                 borderRadius: 4,
                                 overflow: "hidden",
-                                border: "1px solid #ccc",
+                                border: "1px solid var(--color-border-input)",
                             }}
                         >
                             {(["event", "tracking", "birthday"] as const).map((opt) => (
@@ -166,8 +166,8 @@ export default function CreateEventFAB() {
                                         fontSize: 13,
                                         border: "none",
                                         cursor: "pointer",
-                                        backgroundColor: type === opt ? "#0070f3" : "white",
-                                        color: type === opt ? "white" : "#555",
+                                        backgroundColor: type === opt ? "var(--color-btn-primary-bg)" : "var(--color-bg-surface)",
+                                        color: type === opt ? "var(--color-btn-primary-text)" : "var(--color-text-secondary)",
                                         fontWeight: type === opt ? "600" : "normal",
                                     }}
                                 >
@@ -176,7 +176,7 @@ export default function CreateEventFAB() {
                             ))}
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <label style={{ fontSize: 12, color: "#555" }}>{t("titleLabel")}</label>
+                            <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>{t("titleLabel")}</label>
                             <input
                                 type="text"
                                 value={title}
@@ -190,7 +190,7 @@ export default function CreateEventFAB() {
                             <>
                                 <div style={{ display: "flex", gap: 8 }}>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
                                             {t("birthMonthLabel")}
                                         </label>
                                         <select
@@ -206,7 +206,7 @@ export default function CreateEventFAB() {
                                         </select>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
                                             {t("birthDayLabel")}
                                         </label>
                                         <select
@@ -223,7 +223,7 @@ export default function CreateEventFAB() {
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                                    <label style={{ fontSize: 12, color: "#555" }}>
+                                    <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
                                         {t("birthYearLabel")}
                                     </label>
                                     <input
@@ -240,7 +240,7 @@ export default function CreateEventFAB() {
                         ) : (
                             <>
                                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                                    <label style={{ fontSize: 12, color: "#555" }}>
+                                    <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
                                         {t("dateLabel")}
                                     </label>
                                     <input
@@ -253,7 +253,7 @@ export default function CreateEventFAB() {
                                 </div>
                                 <div style={{ display: "flex", gap: 8 }}>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
                                             {t(type === "event" ? "startTimeLabel" : "startTimeLabelOptional")}
                                         </label>
                                         <input
@@ -265,7 +265,7 @@ export default function CreateEventFAB() {
                                         />
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-                                        <label style={{ fontSize: 12, color: "#555" }}>
+                                        <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
                                             {t("endTimeLabel")}
                                         </label>
                                         <input
@@ -279,7 +279,7 @@ export default function CreateEventFAB() {
                             </>
                         )}
                         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <label style={{ fontSize: 12, color: "#555" }}>{t("notesLabel")}</label>
+                            <label style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>{t("notesLabel")}</label>
                             <textarea
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
@@ -290,14 +290,14 @@ export default function CreateEventFAB() {
                                 }}
                             />
                         </div>
-                        {error && <p style={{ fontSize: 13, color: "#c00", margin: 0 }}>{error}</p>}
+                        {error && <p style={{ fontSize: 13, color: "var(--color-error-text)", margin: 0 }}>{error}</p>}
                         <button
                             type="submit"
                             disabled={pending}
                             style={{
                                 padding: "8px",
-                                backgroundColor: "#0070f3",
-                                color: "white",
+                                backgroundColor: "var(--color-btn-primary-bg)",
+                                color: "var(--color-btn-primary-text)",
                                 border: "none",
                                 borderRadius: 4,
                                 cursor: pending ? "not-allowed" : "pointer",

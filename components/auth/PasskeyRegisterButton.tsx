@@ -75,8 +75,8 @@ export function PasskeyRegisterButton({ email }: Props) {
                 <p
                     role="alert"
                     style={{
-                        color: "#c00",
-                        background: "#ffe6e6",
+                        color: "var(--color-error-text)",
+                        background: "var(--color-error-bg)",
                         padding: "8px 12px",
                         borderRadius: 4,
                         fontSize: 14,
@@ -94,8 +94,8 @@ export function PasskeyRegisterButton({ email }: Props) {
                     width: "100%",
                     padding: "10px 0",
                     background: "transparent",
-                    color: "#0070f3",
-                    border: "1px solid #0070f3",
+                    color: "var(--color-link)",
+                    border: "1px solid var(--color-link)",
                     borderRadius: 6,
                     fontSize: 15,
                     cursor: "pointer",

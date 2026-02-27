@@ -48,8 +48,8 @@ export function RegisterForm({ onEmailChange }: Props) {
         return (
             <p
                 style={{
-                    color: "#1a7a1a",
-                    background: "#e8f5e8",
+                    color: "var(--color-success-text)",
+                    background: "var(--color-success-bg)",
                     padding: "12px",
                     borderRadius: 6,
                     fontSize: 14,
@@ -66,8 +66,8 @@ export function RegisterForm({ onEmailChange }: Props) {
                 <p
                     role="alert"
                     style={{
-                        color: "#c00",
-                        background: "#ffe6e6",
+                        color: "var(--color-error-text)",
+                        background: "var(--color-error-bg)",
                         padding: "8px 12px",
                         borderRadius: 4,
                         fontSize: 14,
@@ -80,7 +80,7 @@ export function RegisterForm({ onEmailChange }: Props) {
             <div style={{ marginBottom: 16 }}>
                 <label
                     htmlFor="email"
-                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}
+                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "var(--color-text-primary)" }}
                 >
                     {t("email")}
                 </label>
@@ -95,7 +95,7 @@ export function RegisterForm({ onEmailChange }: Props) {
                         display: "block",
                         width: "100%",
                         padding: "8px 12px",
-                        border: "1px solid #ddd",
+                        border: "1px solid var(--color-border-default)",
                         borderRadius: 6,
                         fontSize: 14,
                     }}
@@ -104,7 +104,7 @@ export function RegisterForm({ onEmailChange }: Props) {
             <div style={{ marginBottom: 16 }}>
                 <label
                     htmlFor="password"
-                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "#333" }}
+                    style={{ display: "block", fontSize: 14, marginBottom: 4, color: "var(--color-text-primary)" }}
                 >
                     {t("password")}
                 </label>
@@ -119,7 +119,7 @@ export function RegisterForm({ onEmailChange }: Props) {
                         display: "block",
                         width: "100%",
                         padding: "8px 12px",
-                        border: "1px solid #ddd",
+                        border: "1px solid var(--color-border-default)",
                         borderRadius: 6,
                         fontSize: 14,
                     }}
@@ -131,8 +131,8 @@ export function RegisterForm({ onEmailChange }: Props) {
                 style={{
                     width: "100%",
                     padding: "10px 0",
-                    background: "#0070f3",
-                    color: "white",
+                    background: "var(--color-btn-primary-bg)",
+                    color: "var(--color-btn-primary-text)",
                     border: "none",
                     borderRadius: 6,
                     fontSize: 15,

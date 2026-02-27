@@ -26,10 +26,10 @@ export type CalendarEvent = {
 };
 
 const EVENT_CHIP_COLORS: Record<string, { background: string; color: string }> = {
-    event: { background: "#0070f3", color: "#fff" },
-    reminder: { background: "#f59e0b", color: "#fff" },
-    birthday: { background: "#ec4899", color: "#fff" },
-    tracking: { background: "#10b981", color: "#fff" },
+    event: { background: "var(--color-chip-event)", color: "var(--color-text-on-chip)" },
+    reminder: { background: "var(--color-chip-reminder)", color: "var(--color-text-on-chip)" },
+    birthday: { background: "var(--color-chip-birthday)", color: "var(--color-text-on-chip)" },
+    tracking: { background: "var(--color-chip-tracking)", color: "var(--color-text-on-chip)" },
 };
 
 function getChipStyle(type: string) {
@@ -239,7 +239,7 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                         style={{
                             padding: "0.5rem 1rem",
                             cursor: "pointer",
-                            color: "#0070f3",
+                            color: "var(--color-link)",
                             whiteSpace: "nowrap",
                             fontSize: "0.9rem",
                         }}
@@ -260,7 +260,7 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                         style={{
                             padding: "0.5rem 1rem",
                             cursor: "pointer",
-                            color: "#0070f3",
+                            color: "var(--color-link)",
                             whiteSpace: "nowrap",
                             fontSize: "0.9rem",
                         }}
@@ -274,8 +274,8 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                         display: "grid",
                         gridTemplateColumns: "auto repeat(7, minmax(0, 1fr))",
                         gap: "1px",
-                        backgroundColor: "#ddd",
-                        border: "1px solid #ddd",
+                        backgroundColor: "var(--color-border-default)",
+                        border: "1px solid var(--color-border-default)",
                         overflow: "hidden",
                     }}
                 >
@@ -285,7 +285,7 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                             padding: "0.75rem 0.5rem",
                             textAlign: "center",
                             fontWeight: "bold",
-                            backgroundColor: "#f5f5f5",
+                            backgroundColor: "var(--color-bg-muted)",
                             fontSize: "0.9em",
                         }}
                     ></div>
@@ -296,7 +296,7 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                                 padding: "0.5rem",
                                 textAlign: "center",
                                 fontWeight: "bold",
-                                backgroundColor: "#f5f5f5",
+                                backgroundColor: "var(--color-bg-muted)",
                             }}
                         >
                             {name}
@@ -311,12 +311,12 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                                 style={{
                                     padding: "0.5rem",
                                     textAlign: "center",
-                                    backgroundColor: "#f5f5f5",
+                                    backgroundColor: "var(--color-bg-muted)",
                                     minHeight: "90px",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    color: "#666",
+                                    color: "var(--color-text-tertiary)",
                                     fontSize: "0.9em",
                                     fontWeight: "500",
                                 }}
@@ -324,17 +324,17 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                                 {week.weekNumber}
                             </div>
                             {week.days.map((day, dayIdx) => {
-                                let backgroundColor = "white";
-                                let color = day.isCurrentMonth ? "#000" : "#999";
+                                let backgroundColor = "var(--color-bg-surface)";
+                                let color = day.isCurrentMonth ? "var(--color-text-heading)" : "var(--color-text-disabled)";
                                 let fontWeight = "normal";
 
                                 if (day.isToday) {
-                                    backgroundColor = "#e6f3ff";
-                                    color = "#0066cc";
+                                    backgroundColor = "var(--color-today-bg)";
+                                    color = "var(--color-today-text)";
                                     fontWeight = "bold";
                                 } else if (day.isHoliday) {
-                                    backgroundColor = "#ffe6e6";
-                                    color = "#c00";
+                                    backgroundColor = "var(--color-holiday-bg)";
+                                    color = "var(--color-holiday-text)";
                                     fontWeight = "bold";
                                 }
 

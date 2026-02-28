@@ -136,11 +136,9 @@ export default async function DayPage({ params }: PageProps) {
             </Text>
 
             {holidayInfo.isHoliday && holidayInfo.name && (
-                <>
-                    <Text variant="h1" style={{ color: "var(--color-red-700)" }}>
-                        {holidayInfo.name}
-                    </Text>
-                </>
+                <Text variant="h1" style={{ color: "var(--color-red-700)" }}>
+                    {holidayInfo.name}
+                </Text>
             )}
 
             <Text variant="helper" style={{ fontSize: "1.1rem" }}>

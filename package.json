@@ -23,6 +23,7 @@
         "react": "19.2.0",
         "react-dom": "19.2.0",
         "sql-template-tag": "^5.2.1",
+        "temporal-polyfill": "^0.3.2",
         "zod": "^3.25.53"
     },
     "devDependencies": {

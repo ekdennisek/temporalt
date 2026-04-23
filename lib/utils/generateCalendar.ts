@@ -2,7 +2,7 @@ import { Temporal } from "temporal-polyfill";
 import { isSwedishHoliday } from "../swedishHolidays";
 
 type CalendarDay = {
-    date: Date;
+    date: string;
     dayOfMonth: number;
     isCurrentMonth: boolean;
     isHoliday: boolean;
@@ -70,7 +70,7 @@ function generateDaysOfWeek(firstDayOfWeek: Temporal.PlainDate) {
         const holidayInfo = isSwedishHoliday(new Date(day.toString()));
 
         return {
-            date: new Date(day.toString()),
+            date: day.toString(),
             dayOfMonth: day.day,
             isCurrentMonth: day.year === now.year && day.month === now.month,
             isHoliday: holidayInfo.isHoliday,

@@ -23,44 +23,34 @@ export function generateCalendar(
 ): CalendarWeek[] {
     const firstDayOfMonth = Temporal.PlainDate.from({ year, month, day: 1 });
 
-    let weeks: CalendarWeek[] = [];
+    let weeks: Temporal.PlainDate[] = [];
     for (
         let week = firstDayOfMonth;
         week.year === year && week.month === month;
         week = week.add({ weeks: 1 })
     ) {
-        if (week.weekOfYear === undefined) throw new Error("Unknown week");
-        const firstDayOfWeek = week.add({ days: 1 - week.dayOfWeek });
-        weeks.push({
-            weekNumber: week.weekOfYear,
-            days: generateDaysOfWeek(firstDayOfWeek),
-        });
+        weeks.push(week);
     }
 
     if (weeks.length < 5) {
-        const week = firstDayOfMonth.subtract({ weeks: 1 });
-        const firstDayOfWeek = week.add({ days: 1 - week.dayOfWeek });
-        if (firstDayOfWeek.weekOfYear === undefined) throw new Error("Unknown week");
-        weeks = [
-            {
-                weekNumber: firstDayOfWeek.weekOfYear,
-                days: generateDaysOfWeek(firstDayOfWeek),
-            },
-            ...weeks,
-        ];
+        const week = weeks[0].subtract({ weeks: 1 });
+        weeks = [week, ...weeks];
     }
 
     if (weeks.length < 6) {
-        const week = Temporal.PlainDate.from({ year, month, day: 1 }).add({ months: 1 });
-        const firstDayOfWeek = week.add({ days: 1 - week.dayOfWeek });
-        if (firstDayOfWeek.weekOfYear === undefined) throw new Error("Unknown week");
-        weeks.push({
-            weekNumber: firstDayOfWeek.weekOfYear,
-            days: generateDaysOfWeek(firstDayOfWeek),
-        });
+        const week = weeks.findLast(Boolean)?.add({ weeks: 1 });
+        if (!week) throw new Error("Couldn't add week");
+        weeks.push(week);
     }
 
-    return weeks;
+    return weeks.map((week) => {
+        const firstDayOfWeek = week.add({ days: 1 - week.dayOfWeek });
+        if (firstDayOfWeek.weekOfYear === undefined) throw new Error("Unknown week");
+        return {
+            weekNumber: firstDayOfWeek.weekOfYear,
+            days: generateDaysOfWeek(firstDayOfWeek),
+        };
+    });
 }
 
 function generateDaysOfWeek(firstDayOfWeek: Temporal.PlainDate) {

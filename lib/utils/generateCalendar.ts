@@ -32,7 +32,7 @@ export function generateCalendar(
         weeks.push(week);
     }
 
-    if (weeks.length < 5) {
+    if (firstDayOfMonth.dayOfWeek === 1) {
         const week = weeks[0].subtract({ weeks: 1 });
         weeks = [week, ...weeks];
     }

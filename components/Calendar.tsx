@@ -1,21 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { calculateWeekNumber } from "@/lib/weekNumber";
-import { isSwedishHoliday } from "@/lib/swedishHolidays";
-
-type CalendarDay = {
-    date: Date;
-    dayOfMonth: number;
-    isCurrentMonth: boolean;
-    isHoliday: boolean;
-    holidayName?: string;
-    isToday: boolean;
-};
-
-type CalendarWeek = {
-    weekNumber: number;
-    days: CalendarDay[];
-};
+import { generateCalendar } from "@/lib/utils/generateCalendar";
 
 export type CalendarEvent = {
     eventId: number;
@@ -55,107 +40,6 @@ function getWeekStartDay(locale: string): number {
     }
 
     return 1; // Default to Monday
-}
-
-function generateCalendar(
-    year: number,
-    month: number,
-    weekStartDay: number,
-    locale: string,
-): CalendarWeek[] {
-    const weeks: CalendarWeek[] = [];
-
-    const firstDayOfMonth = new Date(year, month - 1, 1);
-    const lastDayOfMonth = new Date(year, month, 0);
-
-    // Get today's date for comparison
-    const today = new Date();
-    const todayYear = today.getFullYear();
-    const todayMonth = today.getMonth();
-    const todayDay = today.getDate();
-
-    const currentDate = new Date(firstDayOfMonth);
-    const firstDayWeekday = currentDate.getDay();
-
-    // Calculate days to go back to start of the week
-    const daysToGoBack = (firstDayWeekday - weekStartDay + 7) % 7;
-
-    // If first day of month starts at the beginning of a week (no previous month days needed),
-    // add one full week from previous month
-    if (daysToGoBack === 0) {
-        currentDate.setDate(currentDate.getDate() - 7);
-    } else {
-        // Otherwise just go back to complete the first week
-        currentDate.setDate(currentDate.getDate() - daysToGoBack);
-    }
-
-    // Generate weeks until we complete the last week containing days from current month
-    while (currentDate <= lastDayOfMonth) {
-        const week: CalendarDay[] = [];
-        const weekStartDate = new Date(currentDate);
-
-        for (let i = 0; i < 7; i++) {
-            const isCurrentMonth =
-                currentDate.getMonth() === month - 1 && currentDate.getFullYear() === year;
-            const holidayInfo = isSwedishHoliday(currentDate);
-            const isToday =
-                currentDate.getFullYear() === todayYear &&
-                currentDate.getMonth() === todayMonth &&
-                currentDate.getDate() === todayDay;
-
-            week.push({
-                date: new Date(currentDate),
-                dayOfMonth: currentDate.getDate(),
-                isCurrentMonth,
-                isHoliday: holidayInfo.isHoliday,
-                holidayName: holidayInfo.name,
-                isToday,
-            });
-
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        const weekNumber = calculateWeekNumber(weekStartDate, locale);
-        weeks.push({ weekNumber, days: week });
-    }
-
-    // Check if the last week already contains days from next month
-    const lastWeek = weeks[weeks.length - 1];
-    const hasNextMonthDays = lastWeek.days.some(
-        (day) => day.date.getMonth() !== month - 1 || day.date.getFullYear() !== year,
-    );
-
-    // If last week is entirely within current month, add one full week from next month
-    if (!hasNextMonthDays) {
-        const extraWeek: CalendarDay[] = [];
-        const extraWeekStartDate = new Date(currentDate);
-
-        for (let i = 0; i < 7; i++) {
-            const isCurrentMonth =
-                currentDate.getMonth() === month - 1 && currentDate.getFullYear() === year;
-            const holidayInfo = isSwedishHoliday(currentDate);
-            const isToday =
-                currentDate.getFullYear() === todayYear &&
-                currentDate.getMonth() === todayMonth &&
-                currentDate.getDate() === todayDay;
-
-            extraWeek.push({
-                date: new Date(currentDate),
-                dayOfMonth: currentDate.getDate(),
-                isCurrentMonth,
-                isHoliday: holidayInfo.isHoliday,
-                holidayName: holidayInfo.name,
-                isToday,
-            });
-
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        const extraWeekNumber = calculateWeekNumber(extraWeekStartDate, locale);
-        weeks.push({ weekNumber: extraWeekNumber, days: extraWeek });
-    }
-
-    return weeks;
 }
 
 function formatMonthYear(year: number, month: number, locale: string): string {
@@ -205,7 +89,7 @@ function getNextMonth(year: number, month: number): { year: number; month: numbe
 
 export default function Calendar({ year, month, locale, events = [] }: CalendarProps) {
     const weekStartDay = getWeekStartDay(locale);
-    const weeks = generateCalendar(year, month, weekStartDay, locale);
+    const weeks = generateCalendar(year, month);
     const monthYearText = formatMonthYear(year, month, locale);
     const weekdayNames = getWeekdayNames(weekStartDay, locale);
 
@@ -325,7 +209,9 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                             </div>
                             {week.days.map((day, dayIdx) => {
                                 let backgroundColor = "var(--color-bg-surface)";
-                                let color = day.isCurrentMonth ? "var(--color-text-heading)" : "var(--color-text-disabled)";
+                                let color = day.isCurrentMonth
+                                    ? "var(--color-text-heading)"
+                                    : "var(--color-text-disabled)";
                                 let fontWeight = "normal";
 
                                 if (day.isToday) {
@@ -338,13 +224,14 @@ export default function Calendar({ year, month, locale, events = [] }: CalendarP
                                     fontWeight = "bold";
                                 }
 
-                                const dateStr = `${day.date.getFullYear()}-${String(day.date.getMonth() + 1).padStart(2, "0")}-${String(day.date.getDate()).padStart(2, "0")}`;
+                                const date = new Date(day.date);
+                                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
                                 const dayEvents = events.filter((e) => e.date === dateStr);
 
                                 return (
                                     <Link
                                         key={`${weekIdx}-${dayIdx}`}
-                                        href={`/${day.date.getFullYear()}/${day.date.getMonth() + 1}/${day.date.getDate()}`}
+                                        href={`/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`}
                                         style={{
                                             padding: "0.25rem 0.5rem",
                                             backgroundColor,

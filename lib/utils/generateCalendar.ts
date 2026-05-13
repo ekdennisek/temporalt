@@ -48,12 +48,12 @@ export function generateCalendar(
         if (firstDayOfWeek.weekOfYear === undefined) throw new Error("Unknown week");
         return {
             weekNumber: firstDayOfWeek.weekOfYear,
-            days: generateDaysOfWeek(firstDayOfWeek),
+            days: generateDaysOfWeek(firstDayOfWeek, year, month),
         };
     });
 }
 
-function generateDaysOfWeek(firstDayOfWeek: Temporal.PlainDate) {
+function generateDaysOfWeek(firstDayOfWeek: Temporal.PlainDate, year: number, month: number) {
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
         const now = Temporal.Now.plainDateISO();
         const day = firstDayOfWeek.add({ days: dayOfWeek });
@@ -62,7 +62,7 @@ function generateDaysOfWeek(firstDayOfWeek: Temporal.PlainDate) {
         return {
             date: day.toString(),
             dayOfMonth: day.day,
-            isCurrentMonth: day.year === now.year && day.month === now.month,
+            isCurrentMonth: day.year === year && day.month === month,
             isHoliday: holidayInfo.isHoliday,
             holidayName: holidayInfo.name,
             isToday: now.equals(day),
